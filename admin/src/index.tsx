@@ -9,26 +9,28 @@ const name = pluginPkg.strapi.name;
 
 export default {
   register(app: any) {
-    app.addMenuLink({
-      to: `/plugins/${pluginId}`,
-      icon: PluginIcon,
-      intlLabel: {
-        id: `${pluginId}.plugin.name`,
-        defaultMessage: name,
+    app.createSettingSection(
+      {
+        id: pluginId,
+        intlLabel: {
+          id: `${pluginId}.plugin.name`,
+          defaultMessage: 'Tree Collection',
+        },
       },
-      Component: async () => {
-        const component = await import(/* webpackChunkName: "[request]" */ './pages/App');
-
-        return component;
-      },
-      permissions: [
-        // Uncomment to set the permissions of the plugin here
-        // {
-        //   action: '', // the action name should be plugin::plugin-name.actionType
-        //   subject: null,
-        // },
-      ],
-    });
+      [
+        {
+          intlLabel: {
+            id: `${pluginId}.plugin.name`,
+            defaultMessage: 'Settings',
+          },
+          id: 'settings',
+          to: `/settings/${pluginId}`,
+          Component: async () => {
+            return import('./pages/SettingsPage');
+          }
+        },
+      ]
+    );
     const plugin = {
       id: pluginId,
       initializer: Initializer,
@@ -39,7 +41,9 @@ export default {
     app.registerPlugin(plugin);
   },
 
-  bootstrap(app: any) {},
+  bootstrap(app: any) {
+    console.log(app);
+  },
 
   async registerTrads(app: any) {
     const { locales } = app;

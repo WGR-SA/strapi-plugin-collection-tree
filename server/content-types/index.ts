@@ -1,5 +1,5 @@
-const treeSettings = require('./tree-settings');
+import TreeSettings from './tree-settings/schema.json';
 
 export default {
-  'tree-settings': treeSettings,
+  'tree-settings': { schema: TreeSettings },
 };

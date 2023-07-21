@@ -5,6 +5,7 @@ export default [
     handler: 'myController.index',
     config: {
       policies: [],
+      auth: false
     },
   },
 ];
