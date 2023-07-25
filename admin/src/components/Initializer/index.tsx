@@ -21,4 +21,4 @@ const Initializer = ({ setPlugin }: InitializerProps) => {
   return null;
 };
 
-export default Initializer;
+export default Initializer

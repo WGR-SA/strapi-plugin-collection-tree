@@ -1,11 +1,7 @@
+import settingsRoutes from './settings'
+import sortRoutes from './sort'
+
 export default [
-  {
-    method: 'GET',
-    path: '/',
-    handler: 'myController.index',
-    config: {
-      policies: [],
-      auth: false
-    },
-  },
+    ...settingsRoutes,
+    ...sortRoutes
 ];

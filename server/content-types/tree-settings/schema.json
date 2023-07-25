@@ -4,7 +4,7 @@
   "info": {
     "singularName": "tree-settings",
     "pluralName": "tree-settings",
-    "displayName": "tree-settings"
+    "displayName": "Tree settings"
   },
   "options": {
     "draftAndPublish": false,
@@ -12,15 +12,18 @@
   },
   "pluginOptions": {
     "content-manager": {
-      "visible": false
+      "visible": true
     },
     "content-type-builder": {
-      "visible": false
+      "visible": true
     }
   },
   "attributes": {
-    "models": {
-      "type": "json"
+    "settings": {
+      "type": "json",
+      "default": {
+        "models": []
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
-import treeSettingsController from './tree-settings';
-import myController from './my-controller';
+import settingsController from './settings';
+import sortController from './sort';
 
 export default {
-  treeSettingsController,
-  myController
+  settingsController,
+  sortController
 };

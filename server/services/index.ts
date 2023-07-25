@@ -1,7 +1,7 @@
-import myService from './my-service';
-import treeSettingsService from './tree-settings';
+import models from './models';
+import settings from './settings'
 
 export default {
-  myService,
-  treeSettingsService
+  models,
+  settings,
 };

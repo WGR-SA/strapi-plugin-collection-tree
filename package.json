@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-collection-tree",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "This is the description of the plugin.",
   "strapi": {
     "name": "strapi-plugin-collection-tree",

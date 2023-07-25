@@ -42,7 +42,7 @@ export default {
   },
 
   bootstrap(app: any) {
-    console.log(app);
+    //console.log(app)
   },
 
   async registerTrads(app: any) {
