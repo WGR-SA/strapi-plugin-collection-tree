@@ -10,8 +10,10 @@ const SettingsRequests = {
     return data;
   },
   setSettings: async (data: { models: string[] }) => {
+    console.log(data);
+    
     return await axiosInstance.post(`/strapi-plugin-collection-tree/settings`, {
-      body: data,
+      data,
     });
   },
 }

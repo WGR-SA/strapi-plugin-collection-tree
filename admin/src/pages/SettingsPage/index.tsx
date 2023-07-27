@@ -20,8 +20,9 @@ import {
   HeaderLayout,
   ContentLayout,
   Typography,
-  Checkbox
+  ToggleInput
 } from '@strapi/design-system';
+
 
 import { Check } from '@strapi/icons';
 
@@ -32,11 +33,9 @@ const SettingsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const toggleNotification = useNotification(); 
 
-
   useEffect(() => {
     SettingsRequests.getModels().then(res => {      
       setModels(res.data);
-      
     })
     SettingsRequests.getSettings().then(res => {
       setSettings(res.data);
@@ -44,10 +43,10 @@ const SettingsPage = () => {
     })
   }, [setModels, setSettings]);
 
+  
   const handleSubmit = async () => {
-    setIsSaving(true);
-    const res = await SettingsRequests.setSettings(settings);
-    setSettings(res.data.body);
+    setIsSaving(true);    
+    const res = await SettingsRequests.setSettings( settings );
     setIsSaving(false);
     toggleNotification({
       type: 'success',
@@ -61,14 +60,14 @@ const SettingsPage = () => {
     <>
       <HeaderLayout
         id="title"
-        title="Collection tree settings"
-        subtitle="Manage the settings and behaviour"
+        title="Collection Tree settings"
+        subtitle="Select models where the tree behavior will be applied."
         primaryAction={
           isLoading ? (
             <></>
           ) : (
             <Button
-              onClick={console.log("save")}
+              onClick={handleSubmit}
               startIcon={<Check />}
               size="L"
               disabled={isSaving}
@@ -89,14 +88,24 @@ const SettingsPage = () => {
           paddingLeft={7}
           paddingRight={7}
         >
-          <Stack size={3}>
-            <Typography>Select models where the tree behavior will be applied.</Typography>
+          <Stack>
+            <Typography></Typography>
             <Grid gap={6}>
               <GridItem col={12} s={12}>
                 {models.map((model) => (
-                  <Checkbox key={model} >
-                     {model}
-                  </Checkbox>
+                  <Box
+                    paddingTop={2}
+                    paddingBottom={6}  
+                    key={model}
+                  >
+                    <ToggleInput
+                      label={<Typography style={{ textTransform: 'capitalize' }}>{model}</Typography>}
+                      checked={settings.models.includes(model)}
+                      onLabel="Active"
+                      offLabel="Inactive"
+                      onChange={(e: { target: { checked: boolean } }) => setSettings({ models: (e.target.checked) ? [...settings.models, model] : settings.models.filter((m) => m !== model) })}
+                    />
+                  </Box>
                 ))}
               </GridItem>
             </Grid>

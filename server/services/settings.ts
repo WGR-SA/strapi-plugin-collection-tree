@@ -1,15 +1,23 @@
 import { Strapi } from '@strapi/strapi';
 
+const pluginPath = 'plugin::strapi-plugin-collection-tree'
+
 export default ({ strapi }: { strapi: Strapi }) => ({
   async getSettings() {
-    const settings = await strapi.entityService.findMany('plugin::strapi-plugin-collection-tree.tree-settings')
+    const settings = await strapi.entityService.findMany(`${pluginPath}.tree-settings`)
     return settings.settings
   },
   async setSettings(settings: {models: string[]}) {
-    const current = await strapi.entityService.findMany('plugin::strapi-plugin-collection-tree.tree-settings')
+    const current = await strapi.entityService.findMany(`${pluginPath}.tree-settings`)
 
-    if (current) return await strapi.entityService.create('plugin::strapi-plugin-collection-tree.tree-settings', { data: { settings: settings } });
-     
-    return await strapi.entityService.create('plugin::strapi-plugin-collection-tree.tree-settings', { data: { settings: settings } });
+    if (current) {
+      await strapi.entityService.update(`${pluginPath}.tree-settings`, current.id, { data: { settings: settings } });
+    } else {
+      await strapi.entityService.create(`${pluginPath}.tree-settings`, { data: { settings: settings } });
+    }
+
+    await strapi.service(`${pluginPath}.models`)?.manageTreeFields()
+  
   }
+
 });

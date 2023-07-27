@@ -7,11 +7,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .service('settings')
       .getSettings();
   },
-  async set(ctx) {
+  async set(ctx) {    
     ctx.body = strapi
       .plugin('strapi-plugin-collection-tree')
       .service('settings')
-      .setSettings(ctx.request.body);
+      .setSettings(ctx.request.body.data);
   },
   getModels(ctx) {
     ctx.body = strapi
