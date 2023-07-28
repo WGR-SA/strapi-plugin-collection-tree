@@ -1,1 +1,11 @@
-{}
+{
+  "App.Plugin.title": "Collection Tree",
+
+  "SettingsPage.Notification.message": "Settings successfully updated",
+  "SettingsPage.Header.title": "Collection Tree settings",
+  "SettingsPage.Header.subtitle": "Select models where the tree behavior will be applied.",
+  "SettingsPage.Toggle.on": "Active",
+  "SettingsPage.Toggle.off": "Inactive",
+
+  "SortPage.Header.subtitle": "Drag & drop for sorting entries"
+}

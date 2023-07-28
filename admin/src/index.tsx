@@ -14,7 +14,7 @@ export default {
         id: pluginId,
         intlLabel: {
           id: `${pluginId}.plugin.name`,
-          defaultMessage: 'Tree Collection',
+          defaultMessage: 'Collection Tree',
         },
       },
       [
@@ -31,6 +31,21 @@ export default {
         },
       ]
     );
+
+    app.addMenuLink({
+      to: `/plugins/${pluginId}`,
+      icon: PluginIcon,
+      intlLabel: {
+        id: `${pluginId}.plugin.name`,
+        defaultMessage: 'Collection Tree',
+      },
+      Component: async () => {
+        return import('./pages/SortPageIndex');
+      },
+      permissions: [
+      ],
+    });
+
     const plugin = {
       id: pluginId,
       initializer: Initializer,

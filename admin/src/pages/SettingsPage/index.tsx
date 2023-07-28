@@ -8,8 +8,9 @@
 import React, { useEffect, useState } from 'react';
 import { LoadingIndicatorPage, useNotification } from '@strapi/helper-plugin';
 import pluginId from '../../pluginId';
+import { useIntl } from 'react-intl';
+import getTrad from '../../utils/getTrad';
 import SettingsRequests from '../../api/settings';
-
 
 import {
   Box,
@@ -23,7 +24,6 @@ import {
   ToggleInput
 } from '@strapi/design-system';
 
-
 import { Check } from '@strapi/icons';
 
 const SettingsPage = () => {
@@ -32,6 +32,7 @@ const SettingsPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const toggleNotification = useNotification(); 
+  const { formatMessage } = useIntl();
 
   useEffect(() => {
     SettingsRequests.getModels().then(res => {      
@@ -50,18 +51,20 @@ const SettingsPage = () => {
     setIsSaving(false);
     toggleNotification({
       type: 'success',
-      message: 'Settings successfully updated',
+      message: formatMessage({ id: getTrad('SettingsPage.Notification.message') }),
     });
   };
+
+  if (isLoading) {
+    return <LoadingIndicatorPage />;
+  }
   
-
-
   return (
     <>
       <HeaderLayout
         id="title"
-        title="Collection Tree settings"
-        subtitle="Select models where the tree behavior will be applied."
+        title={formatMessage({ id: getTrad('SettingsPage.Header.title') })}
+        subtitle={formatMessage({ id: getTrad('SettingsPage.Header.subtitle') })}
         primaryAction={
           isLoading ? (
             <></>
@@ -101,9 +104,11 @@ const SettingsPage = () => {
                     <ToggleInput
                       label={<Typography style={{ textTransform: 'capitalize' }}>{model}</Typography>}
                       checked={settings.models.includes(model)}
-                      onLabel="Active"
-                      offLabel="Inactive"
-                      onChange={(e: { target: { checked: boolean } }) => setSettings({ models: (e.target.checked) ? [...settings.models, model] : settings.models.filter((m) => m !== model) })}
+                      onLabel={formatMessage({ id: getTrad('SettingsPage.Toggle.on') })}
+                      offLabel={formatMessage({ id: getTrad('SettingsPage.Toggle.off') })}
+                      onChange={(e: { target: { checked: boolean } }) => {
+                        setSettings({ models: (e.target.checked) ? [...settings.models, model] : settings.models.filter((m) => m !== model) })
+                      }}
                     />
                   </Box>
                 ))}

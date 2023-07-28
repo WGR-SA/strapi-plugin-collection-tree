@@ -14,7 +14,7 @@ const updateSchema = (model: string, data: Object) => {
 }
 
 export default () => ({
-  addAttribute(model: string, field: string, config: {[key: string]: any}) {
+  addAttribute(model: string, field: string, config: {[key: string]: unknown}) {
     let schema = getSchema(model)
     schema.attributes[field] = config
     updateSchema(model, schema)

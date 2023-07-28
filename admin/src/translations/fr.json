@@ -1,1 +1,11 @@
-{}
+{
+  "App.Plugin.title": "Arbre de collection",
+
+  "SettingsPage.Notification.message": "Mise à jour des paramètres réussie",
+  "SettingsPage.Header.title": "Paramètres du plugin de tri",
+  "SettingsPage.Header.subtitle": "Sélectionnez les modèles dans lesquels de l'arbre de tri sera appliqué.",
+  "SettingsPage.Toggle.on": "Actif",
+  "SettingsPage.Toggle.off": "Inactif",
+
+  "SortPage.Header.subtitle": "Glisser-déposer pour trier les entrées"
+}

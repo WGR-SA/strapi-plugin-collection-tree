@@ -17,7 +17,5 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     }
 
     await strapi.service(`${pluginPath}.models`)?.manageTreeFields()
-  
   }
-
 });

@@ -22,7 +22,12 @@
     "settings": {
       "type": "json",
       "default": {
-        "models": []
+        "models": [],
+        "fields": {
+          "lft": "lft",
+          "rght": "rght",
+          "parent_id": "parent_id"
+        }
       }
     }
   }
