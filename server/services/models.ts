@@ -4,7 +4,7 @@ import schemaUpdater from '../utils/schemaUpdate'
 import type { TreeItem } from '../../types'
 
 const pluginPath = 'plugin::strapi-plugin-collection-tree'
-const treeFields = ['lft', 'rght', 'parent_id']
+const treeFields = ['lft', 'rght', 'parentId']
 
 export default ({ strapi }: { strapi: Strapi }) => ({
   getModels() {

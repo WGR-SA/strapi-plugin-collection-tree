@@ -43,9 +43,7 @@ const SortPageView = () => {
     fallbackOnBody: true,
     swapThreshold: 0.65,
     ghostClass: "ghost",
-    group: {
-      name: 'root', put: ['nested'], pull: true
-    }
+    group: "shared"
   };
 
   if (isLoading) {

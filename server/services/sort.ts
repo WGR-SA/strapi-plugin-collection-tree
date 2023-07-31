@@ -15,7 +15,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     tree.forEach(async (entry: any) => {
       await strapi.db.query(`api::${data.key}.${data.key}`).update({
         where: { id: entry.id, },
-        data: { lft: entry.lft, rght: entry.rght, parent_id: entry.parent_id }
+        data: { lft: entry.lft, rght: entry.rght, parentId: entry.parentId }
       });
     })
   },

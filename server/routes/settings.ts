@@ -15,4 +15,3 @@ export default [
     handler: 'settingsController.set',
   },
 ];
- 

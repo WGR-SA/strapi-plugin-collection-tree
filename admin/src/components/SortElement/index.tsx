@@ -4,15 +4,24 @@
  *
  */
 
-import React from 'react';
+import React, { useState } from 'react';
+import { ReactSortable } from "react-sortablejs";
 
 import { Box, Typography } from '@strapi/design-system'
 import { Drag } from '@strapi/icons';
 
 import type { SortItem } from '../../../../types';
 
+const sortableOptions = {
+  animation: 150,
+  fallbackOnBody: true,
+  swapThreshold: 0.65,
+  ghostClass: "ghost",
+  group: "shared"
+};
+
 const SortElement = ({ entry }: { entry: SortItem }) => {
-  console.log(entry.children)
+  const [entries, setEntries] = useState<SortItem[]>(entry.children)
 
   return (
     <Box
@@ -26,8 +35,8 @@ const SortElement = ({ entry }: { entry: SortItem }) => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '.5rem',
-        margin: '0 0 .5rem 0',
+        gap: '0 .5rem',
+        margin: '.5rem 0 0',
         cursor: 'grab'
       }}
     >
@@ -41,9 +50,15 @@ const SortElement = ({ entry }: { entry: SortItem }) => {
         <Drag />
         { entry.Title ?? entry.Name ?? entry.id }
       </Typography>
-      {entry.children.map((subentry) => {
-        <SortElement key={subentry.id} entry={subentry} />
-      })}
+      <ReactSortable list={entries} setList={(newState) => {
+        setEntries(newState)
+        entry.children = newState
+      }} {...sortableOptions}>
+        {entry.children.map((subentry) => {
+          return <SortElement key={subentry.id} entry={subentry} />
+        })}
+      </ReactSortable>
+      
     </Box>
   );
 }
