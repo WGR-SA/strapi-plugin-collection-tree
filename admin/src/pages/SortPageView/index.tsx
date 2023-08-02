@@ -38,6 +38,8 @@ const SortPageView = () => {
     });
   } 
 
+  const capitalize = (str: string) => `${str[0]?.toUpperCase()}${str.slice(1)}`;
+
   const sortableOptions = {
     animation: 150,
     fallbackOnBody: true,
@@ -54,7 +56,7 @@ const SortPageView = () => {
     <Main>
       <HeaderLayout
         id="title"
-        title={model}
+        title={capitalize(model)}
         subtitle={formatMessage({ id: getTrad('SortPage.Header.subtitle') })}
         primaryAction={
           isLoading ? (

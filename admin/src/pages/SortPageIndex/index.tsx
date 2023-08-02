@@ -29,7 +29,7 @@ const SortPageIndex = () => {
       <Switch>
         {settings.models.map((model) => {
           return (
-            <Route path={`/plugins/${pluginId}/${model}`} key="model" component={SortPageView} exact />
+            <Route path={`/plugins/${pluginId}/${model}`} key={model} component={SortPageView} exact />
           );
         })};        
       </Switch>

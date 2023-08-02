@@ -35,7 +35,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     treeFields.forEach((field) => schemaUpdater().removeAttribute(key, field))
   },
   async recoverTree(key: string) {
-    const entries = await strapi.db.query(`api::${key}.${key}`).findMany({ select: ['id'], where: {}, orderBy: { id: 'asc' } })
+    const entries = await strapi.db.query(`api::${key}.${key}`).findMany({ select: ['id', 'lft'], where: {}, orderBy: { id: 'asc' } })
     let tree = 1
     
     entries.forEach(async (entry: TreeItem) => {

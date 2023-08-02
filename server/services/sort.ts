@@ -3,6 +3,8 @@ import treeTransformer from '../utils/treeTransformer'
 
 import type { SortItem } from '../../types'
 
+const pluginPath = 'plugin::strapi-plugin-collection-tree'
+
 export default ({ strapi }: { strapi: Strapi }) => ({
   async getEntries(key: string) {
     const data = await strapi.entityService.findMany(`api::${key}.${key}`, { sort: { lft: 'ASC' } })
@@ -10,6 +12,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return treeTransformer().treeToSort(data)
   },
   async updateEntries(data: { key: string, entries: SortItem[] }) {
+    if (data.entries.length === 0) {
+      data.entries = await strapi.service(`${pluginPath}.sort`)?.getEntries(data.key)
+    }
+
     const tree = treeTransformer().sortToTree(data.entries)
 
     tree.forEach(async (entry: any) => {
