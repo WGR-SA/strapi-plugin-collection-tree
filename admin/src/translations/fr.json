@@ -3,9 +3,16 @@
 
   "SettingsPage.Notification.message": "Mise à jour des paramètres réussie",
   "SettingsPage.Header.title": "Paramètres du plugin de tri",
-  "SettingsPage.Header.subtitle": "Sélectionnez les modèles dans lesquels de l'arbre de tri sera appliqué.",
+  "SettingsPage.Header.subtitle": "",
+  "SettingsPage.Box1.title": "Collections",
+  "SettingsPage.Box1.subtitle": "Sélectionnez les modèles dans lesquels de l'arbre de tri sera appliqué",
+  "SettingsPage.Box2.title": "Champ de l'arbre",
+  "SettingsPage.Box2.subtitle": "Modifiez les champs qui sera utilisé pour l'arbre de tri si besoin",
   "SettingsPage.Toggle.on": "Actif",
   "SettingsPage.Toggle.off": "Inactif",
+
+  "SortPageInfo.Box.title": "Welcome to Collection Tree",
+  "SortPageInfo.Box.content": "Select a collection on the sidebar to start sorting. If theirs no collections on the sidebar, please go to the settings page and select the collections you want to sort.",
 
   "SortPage.Header.subtitle": "Glisser-déposer pour trier les entrées"
 }

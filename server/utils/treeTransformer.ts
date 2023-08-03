@@ -11,9 +11,9 @@ export default () => ({
 
     for (let item of items) {
       let node = treeNodes[item.id];
-      if (item.parentId !== null && item.parentId !== undefined) {
-        if (item.parentId in treeNodes) {
-          treeNodes[item.parentId].children.push(node);
+      if (item.parent !== null && item.parent !== undefined) {
+        if (item.parent in treeNodes) {
+          treeNodes[item.parent].children.push(node);
         }
       } else {
         roots.push(node);
@@ -22,15 +22,13 @@ export default () => ({
 
     return roots
   },
-  sortToTree(entries: SortItem[]): TreeItem[] {
-    console.log(entries);
-    
+  sortToTree(entries: SortItem[]): TreeItem[] {    
     let counter = 1;
     let result: TreeItem[] = [];
 
-    function dfs(node: SortItem, parentId: number | null) {
+    function dfs(node: SortItem, parent: number | null) {
       node.lft = counter++;
-      node.parentId = parentId;
+      node.parent = parent;
 
       for (let child of node.children) {
         dfs(child, node.id);
@@ -42,7 +40,7 @@ export default () => ({
         id: node.id,
         lft: node.lft as number,
         rght: node.rght as number,
-        parentId: node.parentId as number
+        parent: node.parent as number
       });
     }
 

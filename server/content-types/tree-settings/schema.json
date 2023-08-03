@@ -23,10 +23,10 @@
       "type": "json",
       "default": {
         "models": [],
-        "fields": {
+        "attributes": {
           "lft": "lft",
           "rght": "rght",
-          "parentId": "parentId"
+          "parent": "parent"
         }
       }
     }

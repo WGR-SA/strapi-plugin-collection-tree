@@ -9,9 +9,7 @@ const SettingsRequests = {
     const data = await axiosInstance.get(`/strapi-plugin-collection-tree/settings`);
     return data;
   },
-  setSettings: async (data: { models: string[] }) => {
-    console.log(data);
-    
+  setSettings: async (data: { models: string[] }) => {    
     return await axiosInstance.post(`/strapi-plugin-collection-tree/settings`, {
       data,
     });

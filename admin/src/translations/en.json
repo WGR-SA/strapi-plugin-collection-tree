@@ -3,9 +3,17 @@
 
   "SettingsPage.Notification.message": "Settings successfully updated",
   "SettingsPage.Header.title": "Collection Tree settings",
-  "SettingsPage.Header.subtitle": "Select models where the tree behavior will be applied.",
+  "SettingsPage.Header.subtitle": "",
+  "SettingsPage.Box1.title": "Collections",
+  "SettingsPage.Box1.subtitle": "Select models where the tree behavior will be applied",
+  "SettingsPage.Box2.title": "Tree fields",
+  "SettingsPage.Box2.subtitle": "Change tree fieldname if needed",
   "SettingsPage.Toggle.on": "Active",
   "SettingsPage.Toggle.off": "Inactive",
 
+  "SortPageInfo.Box.title": "Welcome to Collection Tree",
+  "SortPageInfo.Box.content": "Select a collection on the sidebar to start sorting. If theirs no collections on the sidebar, please go to the settings page and select the collections you want to sort.",
+
   "SortPage.Header.subtitle": "Drag & drop for sorting entries"
+
 }

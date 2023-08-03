@@ -14,13 +14,13 @@ import SettingsRequests from '../../api/settings';
 
 import {
   Box,
-  Stack,
   Button,
   Grid,
   GridItem,
   HeaderLayout,
   ContentLayout,
   Typography,
+  TextInput,
   ToggleInput
 } from '@strapi/design-system';
 
@@ -28,7 +28,7 @@ import { Check } from '@strapi/icons';
 
 const SettingsPage = () => {
   const [models, setModels] = useState([]);
-  const [settings, setSettings] = useState<{ models: string[] }>({ models: [] });
+  const [settings, setSettings] = useState<{ models: string[], attributes: {lft: string, rght: string, parent: string} }>({models: [], attributes: {lft: 'lft', rght: 'rght', parent: 'parent'}});
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const toggleNotification = useNotification(); 
@@ -86,35 +86,48 @@ const SettingsPage = () => {
           background="neutral0"
           hasRadius
           shadow="filterShadow"
-          paddingTop={6}
-          paddingBottom={6}
-          paddingLeft={7}
-          paddingRight={7}
+          padding={6}
+          marginBottom={6}
         >
-          <Stack>
-            <Typography></Typography>
-            <Grid gap={6}>
-              <GridItem col={12} s={12}>
-                {models.map((model) => (
-                  <Box
-                    paddingTop={2}
-                    paddingBottom={6}  
-                    key={model}
-                  >
-                    <ToggleInput
-                      label={<Typography style={{ textTransform: 'capitalize' }}>{model}</Typography>}
-                      checked={settings.models.includes(model)}
-                      onLabel={formatMessage({ id: getTrad('SettingsPage.Toggle.on') })}
-                      offLabel={formatMessage({ id: getTrad('SettingsPage.Toggle.off') })}
-                      onChange={(e: { target: { checked: boolean } }) => {
-                        setSettings({ models: (e.target.checked) ? [...settings.models, model] : settings.models.filter((m) => m !== model) })
-                      }}
-                    />
-                  </Box>
-                ))}
-              </GridItem>
-            </Grid>
-          </Stack>
+          <Typography variant="delta">{formatMessage({ id: getTrad('SettingsPage.Box1.title') })}</Typography><br />
+          <Typography>{formatMessage({ id: getTrad('SettingsPage.Box1.subtitle') })}</Typography>
+
+          {models.map((model) => (
+            <Box
+              marginTop={4}
+              key={model}
+            >
+              <ToggleInput
+                label={<Typography style={{ textTransform: 'capitalize' }}>{model}</Typography>}
+                checked={settings.models.includes(model)}
+                onLabel={formatMessage({ id: getTrad('SettingsPage.Toggle.on') })}
+                offLabel={formatMessage({ id: getTrad('SettingsPage.Toggle.off') })}
+                onChange={(e: { target: { checked: boolean } }) => {
+                  setSettings({ models: (e.target.checked) ? [...settings.models, model] : settings.models.filter((m) => m !== model), attributes: settings.attributes })
+                }}
+              />
+            </Box>
+          ))}
+        </Box>
+        <Box
+          background="neutral0"
+          hasRadius
+          shadow="filterShadow"
+          padding={6}
+        >
+          <Typography variant="delta">{formatMessage({ id: getTrad('SettingsPage.Box2.title') })}</Typography><br />
+          <Typography>{formatMessage({ id: getTrad('SettingsPage.Box2.subtitle') })}</Typography>
+          <Grid marginTop={4} gap={6}>
+            <GridItem col={4} s={12}>
+              <TextInput label="Lft" name="lft" onChange={(event) => setSettings({ ...settings, attributes: { ...settings.attributes, lft: event.target.value } })} value={settings.attributes.lft} required />
+            </GridItem>
+            <GridItem col={4} s={12}>
+              <TextInput label="Rght" name="rght" onChange={(event) => setSettings({ ...settings, attributes: { ...settings.attributes, rght: event.target.value } })} value={settings.attributes.rght} required />
+            </GridItem>
+            <GridItem col={4} s={12}>
+              <TextInput label="Parent" name="parent" onChange={(event) => setSettings({ ...settings, attributes: { ...settings.attributes, parent: event.target.value } })} value={settings.attributes.parent} required />
+            </GridItem>
+          </Grid>
         </Box>
       </ContentLayout>
     </>
