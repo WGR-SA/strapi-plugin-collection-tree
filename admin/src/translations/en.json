@@ -12,7 +12,7 @@
   "SettingsPage.Toggle.off": "Inactive",
 
   "SortPageInfo.Box.title": "Welcome to Collection Tree",
-  "SortPageInfo.Box.content": "Select a collection on the sidebar to start sorting. If theirs no collections on the sidebar, please go to the settings page and select the collections you want to sort.",
+  "SortPageInfo.Box.content": "Select a collection on the sidebar to start sorting. If there are no collections on the sidebar, please go to the settings page and select the collections you want to sort.",
 
   "SortPage.Header.subtitle": "Drag & drop for sorting entries"
 
