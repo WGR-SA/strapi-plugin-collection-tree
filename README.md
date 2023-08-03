@@ -7,7 +7,7 @@ The Collection Tree Plugin allows for simple sorting of your collections. It inc
 Install the plugin by running the following command:
 
 ```
-npm install strapi-plugin-collection-tree
+npm install @wgr-sa/strapi-plugin-collection-tree
 ```
 
 ## Settings

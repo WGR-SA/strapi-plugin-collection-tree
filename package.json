@@ -1,5 +1,5 @@
 {
-  "name": "strapi-plugin-collection-tree",
+  "name": "@wgr-sa/strapi-plugin-collection-tree",
   "version": "0.1.0",
   "description": "Strapi plugin to easily sort your collections",
   "strapi": {
