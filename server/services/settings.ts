@@ -5,7 +5,7 @@ const pluginPath = 'plugin::strapi-plugin-collection-tree'
 export default ({ strapi }: { strapi: Strapi }) => ({
   async getSettings() {
     const settings = await strapi.entityService.findMany(`${pluginPath}.tree-settings`)
-    return settings.settings ?? { models: [], attributes: { lft: 'lft', rght: 'rght', parent: 'parent' } }
+    return (settings) ? settings.settings : { models: [], attributes: { lft: 'lft', rght: 'rght', parent: 'parent' } }
   },
   async setSettings(settings: {models: string[]}) {
     const current = await strapi.entityService.findMany(`${pluginPath}.tree-settings`)

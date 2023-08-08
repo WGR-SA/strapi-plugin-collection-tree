@@ -1,6 +1,6 @@
 {
   "name": "@wgr-sa/strapi-plugin-collection-tree",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Strapi plugin to easily sort your collections",
   "repository": "https://github.com/WGR-SA/nuxt-form.git",
   "strapi": {
