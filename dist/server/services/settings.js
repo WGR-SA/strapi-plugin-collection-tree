@@ -3,9 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const pluginPath = 'plugin::strapi-plugin-collection-tree';
 exports.default = ({ strapi }) => ({
     async getSettings() {
-        var _a;
         const settings = await strapi.entityService.findMany(`${pluginPath}.tree-settings`);
-        return (_a = settings.settings) !== null && _a !== void 0 ? _a : { models: [], attributes: { lft: 'lft', rght: 'rght', parent: 'parent' } };
+        return (settings) ? settings.settings : { models: [], attributes: { lft: 'lft', rght: 'rght', parent: 'parent' } };
     },
     async setSettings(settings) {
         var _a;
