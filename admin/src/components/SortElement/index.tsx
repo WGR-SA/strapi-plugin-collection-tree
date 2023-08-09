@@ -48,7 +48,7 @@ const SortElement = ({ entry }: { entry: SortItem }) => {
         }}
       >
         <Drag />
-        { entry.Title ?? entry.Name ?? entry.id }
+        { entry.title ?? entry.name ??  entry.id }
       </Typography>
       <ReactSortable list={entries} setList={(newState) => {
         setEntries(newState)
