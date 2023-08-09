@@ -1,18 +1,12 @@
 export default {
-  lft: {
+  page_order: {
     type: "integer",
-    visible: false,
     default: null
   },
-  rght: {
-    type: "integer",
-    visible: false,
-    default: null
-  },
-  parent: {
-    type: "relation",
-    relation: 'oneToOne',
-    target: "collection",
-    visible: true
+  children: { 
+    type: "relation", 
+    relation: "oneToMany", 
+    target: "collection", 
+    mappedBy: "parent" 
   }
 }
