@@ -1,18 +1,16 @@
+import type { CollectionTreeConfig } from '../../types'
+
+const config: CollectionTreeConfig = {
+  models: [],
+  fieldname: {
+    lft: "lft",
+    rght: "rght",
+    parent: "parent",
+    children: "children"
+  }
+}
+
 export default {
-  default: {
-    models: [],
-    attributes: {
-      page_order: {
-        type: "integer",
-        default: null
-      },
-      children: {
-        type: "relation",
-        relation: "oneToMany",
-        target: "collection",
-        mappedBy: "parent"
-      }
-    }
-  }, 
+  default: config, 
   validator() {},
 };

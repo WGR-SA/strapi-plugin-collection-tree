@@ -1,20 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const pluginPath = 'plugin::strapi-plugin-collection-tree';
+const serviceGetter_1 = require("../utils/serviceGetter");
 exports.default = ({ strapi }) => ({
+    async getPluginStore() {
+        return await strapi.store({
+            environment: '',
+            type: 'plugin',
+            name: 'collection-tree',
+        });
+    },
     async getSettings() {
-        const settings = await strapi.entityService.findMany(`${pluginPath}.tree-settings`);
-        return (settings) ? settings.settings : { models: [], attributes: { lft: 'lft', rght: 'rght', parent: 'parent' } };
+        var _a;
+        const store = await ((_a = (0, serviceGetter_1.getPluginService)('settings')) === null || _a === void 0 ? void 0 : _a.getPluginStore());
+        return await store.get({ key: 'settings' });
     },
     async setSettings(settings) {
-        var _a;
-        const current = await strapi.entityService.findMany(`${pluginPath}.tree-settings`);
-        if (current) {
-            await strapi.entityService.update(`${pluginPath}.tree-settings`, current.id, { data: { settings: settings } });
-        }
-        else {
-            await strapi.entityService.create(`${pluginPath}.tree-settings`, { data: { settings: settings } });
-        }
-        await ((_a = strapi.service(`${pluginPath}.models`)) === null || _a === void 0 ? void 0 : _a.manageTreeFields());
+        var _a, _b;
+        const store = await ((_a = (0, serviceGetter_1.getPluginService)('settings')) === null || _a === void 0 ? void 0 : _a.getPluginStore());
+        await store.set({ key: 'settings', value: settings });
+        await ((_b = (0, serviceGetter_1.getPluginService)('models')) === null || _b === void 0 ? void 0 : _b.manageTreeFields());
     }
 });

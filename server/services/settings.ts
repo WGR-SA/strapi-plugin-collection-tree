@@ -1,21 +1,25 @@
-import { Strapi } from '@strapi/strapi';
+import { Strapi } from '@strapi/strapi'
+import { getPluginService } from '../utils/serviceGetter'
 
-const pluginPath = 'plugin::strapi-plugin-collection-tree'
-
+import type { CollectionTreeConfig } from '../../types'
+ 
 export default ({ strapi }: { strapi: Strapi }) => ({
-  async getSettings() {
-    const settings = await strapi.entityService.findMany(`${pluginPath}.tree-settings`)
-    return (settings) ? settings.settings : { models: [], attributes: { lft: 'lft', rght: 'rght', parent: 'parent' } }
+  async getPluginStore() {
+    return await strapi.store({
+      environment: '',
+      type: 'plugin',
+      name: 'collection-tree',
+    })
   },
-  async setSettings(settings: {models: string[]}) {
-    const current = await strapi.entityService.findMany(`${pluginPath}.tree-settings`)
-
-    if (current) {
-      await strapi.entityService.update(`${pluginPath}.tree-settings`, current.id, { data: { settings: settings } });
-    } else {
-      await strapi.entityService.create(`${pluginPath}.tree-settings`, { data: { settings: settings } });
-    }
-
-    await strapi.service(`${pluginPath}.models`)?.manageTreeFields()
+  async getSettings() {
+    const store = await getPluginService('settings')?.getPluginStore()
+    
+    return await store.get({ key: 'settings' })
+  },
+  async setSettings(settings: CollectionTreeConfig) {
+    const store = await getPluginService('settings')?.getPluginStore()
+    
+    await store.set({ key: 'settings', value: settings })
+    await getPluginService('models')?.manageTreeFields()
   }
 });

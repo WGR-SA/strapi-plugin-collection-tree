@@ -34,8 +34,10 @@ const updateSchema = (model, data) => {
     fs.writeFileSync(getSchemaPath(model), JSON.stringify(data));
 };
 exports.default = () => ({
-    addAttribute(model, field, config) {
+    addAttribute(model, field, parent, config) {
         let schema = getSchema(model);
+        if (config.mappedBy)
+            config.mappedBy = parent;
         schema.attributes[field] = config;
         updateSchema(model, schema);
     },

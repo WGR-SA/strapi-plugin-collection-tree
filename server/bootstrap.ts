@@ -1,7 +1,9 @@
 import { Strapi } from '@strapi/strapi';
+import { getPluginService } from './utils/serviceGetter';
+import config from './config'
 
-const pluginPath = 'plugin::strapi-plugin-collection-tree'
-
-export default ({ strapi }: { strapi: Strapi }) => {
-  strapi.service(`${pluginPath}.models`)?.manageTreeFields()
+export default async ({ strapi }: { strapi: Strapi }) => {  
+  const settings = await getPluginService('settings')?.getSettings()
+  if (!settings) await getPluginService('settings')?.setSettings(config.default)
+  await getPluginService('models')?.manageTreeFields()
 };

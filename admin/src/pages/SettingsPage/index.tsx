@@ -12,6 +12,8 @@ import { useIntl } from 'react-intl';
 import getTrad from '../../utils/getTrad';
 import SettingsRequests from '../../api/settings';
 
+import type { CollectionTreeConfig  } from '../../../../types';
+
 import {
   Box,
   Button,
@@ -28,7 +30,7 @@ import { Check } from '@strapi/icons';
 
 const SettingsPage = () => {
   const [models, setModels] = useState([]);
-  const [settings, setSettings] = useState<{ models: string[], attributes: {lft: string, rght: string, parent: string} }>({models: [], attributes: {lft: 'lft', rght: 'rght', parent: 'parent'}});
+  const [settings, setSettings] = useState<CollectionTreeConfig>({ models: [], fieldname: {lft: 'lft', rght: 'rght', parent: 'parent', children: 'children'}});
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const toggleNotification = useNotification(); 
@@ -103,7 +105,7 @@ const SettingsPage = () => {
                 onLabel={formatMessage({ id: getTrad('SettingsPage.Toggle.on') })}
                 offLabel={formatMessage({ id: getTrad('SettingsPage.Toggle.off') })}
                 onChange={(e: { target: { checked: boolean } }) => {
-                  setSettings({ models: (e.target.checked) ? [...settings.models, model] : settings.models.filter((m) => m !== model), attributes: settings.attributes })
+                  setSettings({ models: (e.target.checked) ? [...settings.models, model] : settings.models.filter((m) => m !== model), fieldname: settings.fieldname })
                 }}
               />
             </Box>
@@ -118,14 +120,17 @@ const SettingsPage = () => {
           <Typography variant="delta">{formatMessage({ id: getTrad('SettingsPage.Box2.title') })}</Typography><br />
           <Typography>{formatMessage({ id: getTrad('SettingsPage.Box2.subtitle') })}</Typography>
           <Grid marginTop={4} gap={6}>
-            <GridItem col={4} s={12}>
-              <TextInput label="Lft" name="lft" onChange={(event) => setSettings({ ...settings, attributes: { ...settings.attributes, lft: event.target.value } })} value={settings.attributes.lft} required />
+            <GridItem col={6} s={12}>
+              <TextInput label="Lft" name="lft" onChange={(event) => setSettings({ ...settings, fieldname: { ...settings.fieldname, lft: event.target.value } })} value={settings.fieldname.lft} required />
             </GridItem>
-            <GridItem col={4} s={12}>
-              <TextInput label="Rght" name="rght" onChange={(event) => setSettings({ ...settings, attributes: { ...settings.attributes, rght: event.target.value } })} value={settings.attributes.rght} required />
+            <GridItem col={6} s={12}>
+              <TextInput label="Rght" name="rght" onChange={(event) => setSettings({ ...settings, fieldname: { ...settings.fieldname, rght: event.target.value } })} value={settings.fieldname.rght} required />
             </GridItem>
-            <GridItem col={4} s={12}>
-              <TextInput label="Parent" name="parent" onChange={(event) => setSettings({ ...settings, attributes: { ...settings.attributes, parent: event.target.value } })} value={settings.attributes.parent} required />
+            <GridItem col={6} s={12}>
+              <TextInput label="Parent" name="parent" onChange={(event) => setSettings({ ...settings, fieldname: { ...settings.fieldname, parent: event.target.value } })} value={settings.fieldname.parent} required />
+            </GridItem>
+            <GridItem col={6} s={12}>
+              <TextInput label="Children" name="parent" onChange={(event) => setSettings({ ...settings, fieldname: { ...settings.fieldname, children: event.target.value } })} value={settings.fieldname.children} required />
             </GridItem>
           </Grid>
         </Box>

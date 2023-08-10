@@ -1,3 +1,13 @@
+export type CollectionTreeConfig = {
+  models: string[],
+  fieldname: {
+    lft: string,
+    rght: string,
+    parent: string,
+    children: string,
+  }
+}
+
 export interface TreeItem {
   id: number,
   lft: number,

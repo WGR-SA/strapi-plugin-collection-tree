@@ -2,19 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     lft: {
-        type: "integer",
-        visible: false,
+        type: 'integer',
         default: null
     },
     rght: {
-        type: "integer",
-        visible: false,
+        type: 'integer',
         default: null
     },
-    parent: {
-        type: "relation",
-        relation: 'oneToOne',
-        target: "collection",
-        visible: true
+    children: {
+        type: 'relation',
+        relation: 'oneToMany',
+        target: 'collection',
+        mappedBy: 'parent'
     }
 };
