@@ -9,6 +9,12 @@ exports.default = {
         type: 'integer',
         default: null
     },
+    parent: {
+        type: "relation",
+        relation: "manyToOne",
+        target: "api::page.page",
+        inversedBy: "children"
+    },
     children: {
         type: 'relation',
         relation: 'oneToMany',

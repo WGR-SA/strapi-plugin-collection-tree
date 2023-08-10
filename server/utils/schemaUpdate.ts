@@ -14,10 +14,8 @@ const updateSchema = (model: string, data: Object) => {
 }
 
 export default () => ({
-  addAttribute(model: string, field: string, parent: string, config: {[key: string]: any}) {    
+  addAttribute(model: string, field: string, config: {[key: string]: any}) {    
     let schema = getSchema(model)
-    
-    if (config.mappedBy) config.mappedBy = parent
     schema.attributes[field] = config
 
     updateSchema(model, schema)

@@ -33,7 +33,11 @@ exports.default = ({ strapi }) => ({
         Object.keys(attributes_default_1.default).forEach((field) => {
             if (attributes_default_1.default[field].target)
                 attributes_default_1.default[field].target = `api::${key}.${key}`;
-            (0, schemaUpdate_1.default)().addAttribute(key, settings.fieldname[field], settings.fieldname['parent'], attributes_default_1.default[field]);
+            if (attributes_default_1.default[field].mappedBy)
+                attributes_default_1.default[field].mappedBy = settings.fieldname['parent'];
+            if (attributes_default_1.default[field].inversedBy)
+                attributes_default_1.default[field].inversedBy = settings.fieldname['children'];
+            (0, schemaUpdate_1.default)().addAttribute(key, settings.fieldname[field], attributes_default_1.default[field]);
         });
         (_b = (0, serviceGetter_1.getPluginService)('models')) === null || _b === void 0 ? void 0 : _b.recoverTree(key);
     },

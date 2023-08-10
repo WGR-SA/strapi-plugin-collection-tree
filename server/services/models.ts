@@ -30,7 +30,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     
     Object.keys(attributes).forEach((field) => {      
       if (attributes[field].target) attributes[field].target = `api::${key}.${key}`
-      schemaUpdater().addAttribute(key, settings.fieldname[field], settings.fieldname['parent'], attributes[field])
+      if (attributes[field].mappedBy) attributes[field].mappedBy = settings.fieldname['parent']
+      if (attributes[field].inversedBy) attributes[field].inversedBy = settings.fieldname['children']
+      
+      schemaUpdater().addAttribute(key, settings.fieldname[field], attributes[field])
     });
         
     getPluginService('models')?.recoverTree(key)
