@@ -21,5 +21,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     
     await store.set({ key: 'settings', value: settings })
     await getPluginService('models')?.manageTreeFields()
+  },
+  async getLocales(model: string) {
+    const localized = getPluginService('models')?.isLocalized(model) 
+    if (!localized) return []
+
+    const locales = await strapi.entityService.findMany('plugin::i18n.locale')
+    return locales
   }
 });

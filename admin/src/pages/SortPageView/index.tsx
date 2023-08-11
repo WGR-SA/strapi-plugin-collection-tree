@@ -5,28 +5,38 @@ import getTrad from '../../utils/getTrad';
 import { ReactSortable } from "react-sortablejs";
 
 import { LoadingIndicatorPage, useNotification } from '@strapi/helper-plugin';
-import { Main, ContentLayout, HeaderLayout, Button } from '@strapi/design-system'
+import { Main, ContentLayout, HeaderLayout, Button, Flex } from '@strapi/design-system'
 import { Check } from '@strapi/icons';
 
 import type { SortItem } from '../../../../types';
 
 import SortElement from '../../components/SortElement'
+import SortLocaleSelect from '../../components/SortLocaleSelect'
 import TreeRequests from '../../api/tree';
+import SettingsRequests from '../../api/settings';
 
 const SortPageView = () => {
   const { formatMessage } = useIntl();
-  const model = useLocation().pathname.split('/').pop()
+  
+  const model = useLocation().pathname.split('/').pop()  
+  const urlQuery = new URLSearchParams(useLocation().search);  
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [entries, setEntries] = useState<SortItem[]>([])
+  const [locales, setLocales] = useState<any[]>([])
   const toggleNotification = useNotification(); 
 
   useEffect(() => {
-    TreeRequests.getEntries(model).then(res => {
+    SettingsRequests.getLocales(model).then(res => {
+      setLocales(res.data);
+    })
+    TreeRequests.getEntries(model, urlQuery.get('locale')).then(res => {
       setEntries(res.data);
       setIsLoading(false)      
     })
-  }, [setEntries]);
+
+
+  }, [setEntries, setLocales]);
 
   const handleSubmit = async () => {
     setIsSaving(true);    
@@ -62,15 +72,18 @@ const SortPageView = () => {
           isLoading ? (
             <></>
           ) : (
-            <Button
-              onClick={handleSubmit}
-              startIcon={<Check />}
-              size="L"
-              disabled={isSaving}
-              loading={isSaving}
-            >
-              Save
-            </Button>
+            <Flex gap={2}>
+              <SortLocaleSelect locales={locales} />
+              <Button
+                onClick={handleSubmit}
+                startIcon={<Check />}
+                size="L"
+                disabled={isSaving}
+                loading={isSaving}
+              >
+                Save
+              </Button>
+            </Flex>
           )
         }
       />

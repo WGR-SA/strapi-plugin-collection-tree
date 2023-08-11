@@ -3,7 +3,7 @@
 
   "SettingsPage.Notification.message": "Paramètres mis à jour avec succès",
   "SettingsPage.Header.title": "Paramètres de l'arbre de Collection",
-  "SettingsPage.Header.subtitle": "",
+  "SettingsPage.Header.subtitle": " ",
   "SettingsPage.Box1.title": "Collections",
   "SettingsPage.Box1.subtitle": "Sélectionnez les modèles sur lesquels le comportement de l'arbre sera appliqué",
   "SettingsPage.Box2.title": "Champ de l'arbre",

@@ -10,9 +10,11 @@ import SortNav from '../../components/SortNav';
 import SortPageView from '../SortPageView';
 import SortPageInfo from '../SortPageInfo';
 
+
 const SortPageIndex = () => {
   const [settings, setSettings] = useState<{ models: string[] }>({ models: [] });
   const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     SettingsRequests.getSettings().then(res => {

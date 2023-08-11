@@ -19,4 +19,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       .service('models')
       .getModels();
   },
+  async getLocales(ctx) {
+    const { model } = ctx.request.query;
+    ctx.body = await strapi
+      .plugin('strapi-plugin-collection-tree')
+      .service('settings')
+      .getLocales(model);
+  },
 });

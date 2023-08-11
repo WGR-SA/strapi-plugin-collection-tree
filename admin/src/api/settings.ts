@@ -5,6 +5,10 @@ const SettingsRequests = {
     const data = await axiosInstance.get(`/strapi-plugin-collection-tree/models`);
     return data;
   },
+  getLocales: async (model: string) => {    
+    const data = await axiosInstance.get(`/strapi-plugin-collection-tree/locales?model=${model}`);
+    return data;
+  },
   getSettings: async () => {
     const data = await axiosInstance.get(`/strapi-plugin-collection-tree/settings`);
     return data;

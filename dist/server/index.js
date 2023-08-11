@@ -7,7 +7,7 @@ const register_1 = __importDefault(require("./register"));
 const bootstrap_1 = __importDefault(require("./bootstrap"));
 const destroy_1 = __importDefault(require("./destroy"));
 const config_1 = __importDefault(require("./config"));
-const content_types_1 = __importDefault(require("./content-types"));
+//import contentTypes from './content-types';
 const controllers_1 = __importDefault(require("./controllers"));
 const routes_1 = __importDefault(require("./routes"));
 const middlewares_1 = __importDefault(require("./middlewares"));
@@ -21,7 +21,7 @@ exports.default = {
     controllers: controllers_1.default,
     routes: routes_1.default,
     services: services_1.default,
-    contentTypes: content_types_1.default,
+    //contentTypes,
     policies: policies_1.default,
     middlewares: middlewares_1.default,
 };
