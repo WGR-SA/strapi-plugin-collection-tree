@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import { Layout } from '@strapi/design-system';
 import { LoadingIndicatorPage } from '@strapi/helper-plugin';

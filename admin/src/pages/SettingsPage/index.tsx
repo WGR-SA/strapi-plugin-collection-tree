@@ -7,7 +7,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { LoadingIndicatorPage, useNotification } from '@strapi/helper-plugin';
-import pluginId from '../../pluginId';
 import { useIntl } from 'react-intl';
 import getTrad from '../../utils/getTrad';
 import SettingsRequests from '../../api/settings';

@@ -4,7 +4,7 @@
  *
  */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import pluginId from '../../pluginId';
 import { useIntl } from 'react-intl';

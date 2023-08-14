@@ -2,9 +2,6 @@ import { Strapi } from '@strapi/strapi';
 import schemaUpdater from '../utils/schemaUpdate'
 import { getPluginService } from '../utils/serviceGetter'
 import attributes from '../config/attributes.default'
-
-import type { TreeItem } from '../../types'
-import { Key } from '@strapi/icons';
  
 export default ({ strapi }: { strapi: Strapi }) => ({
   getModels() {

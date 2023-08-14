@@ -2,7 +2,7 @@ import { Strapi } from '@strapi/strapi';
 import treeTransformer from '../utils/treeTransformer'
 import { getPluginService } from '../utils/serviceGetter'
 
-import type { SortItem, TreeItem, CollectionTreeConfig } from '../../types'
+import type { SortItem, TreeItem } from '../../types'
 
 
 export default ({ strapi }: { strapi: Strapi }) => ({
