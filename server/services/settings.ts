@@ -5,11 +5,10 @@ import type { CollectionTreeConfig } from '../../types'
  
 export default ({ strapi }: { strapi: Strapi }) => ({
   async getPluginStore() {
-    return await strapi.store({
-      environment: '',
-      type: 'plugin',
-      name: 'collection-tree',
-    })
+    return await strapi.store({ environment: '', type: 'plugin', name: 'collection-tree', })
+  },
+  async getIntlStore() {
+    return await strapi.store({ environment: '', type: 'plugin', name: 'i18n', })
   },
   async getSettings() {
     const store = await getPluginService('settings')?.getPluginStore()
@@ -26,7 +25,16 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const localized = getPluginService('models')?.isLocalized(model) 
     if (!localized) return []
 
-    const locales = await strapi.entityService.findMany('plugin::i18n.locale')
+    const intlStore = await getPluginService('settings')?.getIntlStore()
+    const defaultLocale = await intlStore.get({ key: 'default_locale' })
+    console.log(defaultLocale);
+    
+
+    const data = await strapi.entityService.findMany('plugin::i18n.locale')
+    const locales = data.map((locale: {[key: string]: unknown}) => {
+      return { ...locale, isDefault: locale.code === defaultLocale }
+    })
+    
     return locales
   }
 });

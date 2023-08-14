@@ -13,7 +13,7 @@ exports.default = ({ strapi }) => ({
         if (locale)
             conditions["locale"] = locale;
         const data = await strapi.entityService.findMany(`api::${key}.${key}`, conditions);
-        data.map((entry) => entry.parent = (entry[settings.fieldname["parent"]]) ? entry[settings.fieldname["parent"]].id : null);
+        data.map((entry) => { var _a; return entry.parent = (entry[settings.fieldname["parent"]]) ? (_a = entry[settings.fieldname["parent"]]) === null || _a === void 0 ? void 0 : _a.id : null; });
         return (0, treeTransformer_1.default)().treeToSort(data);
     },
     async updateEntries(data) {

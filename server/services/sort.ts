@@ -2,7 +2,7 @@ import { Strapi } from '@strapi/strapi';
 import treeTransformer from '../utils/treeTransformer'
 import { getPluginService } from '../utils/serviceGetter'
 
-import type { SortItem, CollectionTreeConfig } from '../../types'
+import type { SortItem, TreeItem, CollectionTreeConfig } from '../../types'
 
 
 export default ({ strapi }: { strapi: Strapi }) => ({
@@ -13,7 +13,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     const data = await strapi.entityService.findMany(`api::${key}.${key}`, conditions)    
     
-    data.map((entry: any) => entry.parent = (entry[settings.fieldname["parent"]]) ? entry[settings.fieldname["parent"]].id : null)
+    data.map((entry: any) => entry.parent = (entry[settings.fieldname["parent"]]) ? entry[settings.fieldname["parent"]]?.id : null)
     
     return treeTransformer().treeToSort(data)
   },
@@ -26,7 +26,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     const tree = treeTransformer().sortToTree(data.entries)
 
-    tree.forEach(async (entry: any) => {
+    tree.forEach(async (entry: TreeItem) => {
       await strapi.db.query(`api::${data.key}.${data.key}`).update({
         where: { id: entry.id, },
         data: { [settings.fieldname["lft"]]: entry.lft, [settings.fieldname["rght"]]: entry.rght, [settings.fieldname["parent"]]: entry.parent }

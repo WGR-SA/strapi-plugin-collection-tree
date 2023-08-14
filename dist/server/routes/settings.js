@@ -20,9 +20,5 @@ exports.default = [
         method: 'GET',
         path: '/locales',
         handler: 'settingsController.getLocales',
-        // config: {
-        //   policies: [],
-        //   auth: false,
-        // }
     },
 ];

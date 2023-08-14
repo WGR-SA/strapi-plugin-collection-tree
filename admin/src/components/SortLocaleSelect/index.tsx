@@ -11,13 +11,8 @@ import { SingleSelect, SingleSelectOption } from '@strapi/design-system'
 
 
 const SortLocaleSelect = ({ locales }: { locales: any }) => {
-  
   const path = useLocation().pathname
-  // To do get defautl locale  
-  const currentLocale = new URLSearchParams(useLocation().search).get('locale') ?? 'en' // locales[0].code
-
-
-  
+  const currentLocale = new URLSearchParams(useLocation().search).get('locale') ?? locales.find((locale) => locale.isDefault).code
 
   if (locales.length)
     return (

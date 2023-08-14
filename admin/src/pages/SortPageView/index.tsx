@@ -88,6 +88,7 @@ const SortPageView = () => {
               <Button
                 onClick={handleSubmit}
                 startIcon={<Check />}
+                size="M"
                 disabled={isSaving}
                 loading={isSaving}
               >
