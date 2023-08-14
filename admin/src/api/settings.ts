@@ -9,6 +9,10 @@ const SettingsRequests = {
     const data = await axiosInstance.get(`/strapi-plugin-collection-tree/locales?model=${model}`);
     return data;
   },
+  getDisplayField: async (model: string) => {
+    const data = await axiosInstance.get(`/strapi-plugin-collection-tree/display-field?model=${model}`);
+    return data;
+  },
   getSettings: async () => {
     const data = await axiosInstance.get(`/strapi-plugin-collection-tree/settings`);
     return data;

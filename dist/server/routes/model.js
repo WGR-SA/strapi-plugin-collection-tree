@@ -11,8 +11,8 @@ exports.default = [
         // }
     },
     {
-        method: 'POST',
-        path: '/get-display-field',
+        method: 'GET',
+        path: '/display-field',
         handler: 'modelController.getDisplayField',
         // config: {
         //   policies: [],

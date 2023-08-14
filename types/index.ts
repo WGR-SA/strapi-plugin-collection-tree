@@ -22,5 +22,6 @@ export interface SortItem {
   rght: number,
   parent: number | null,
   children: SortItem[],
+  displayField?: string,
   [key: string]: unknown
 }

@@ -9,9 +9,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
 
   async getDisplayField(ctx) {
+    const { model } = ctx.request.query;
     ctx.body = await strapi
       .plugin('strapi-plugin-collection-tree')
       .service('models')
-      .getDisplayField(ctx.request.body.data.model);
+      .getDisplayField(model);
   }
 });

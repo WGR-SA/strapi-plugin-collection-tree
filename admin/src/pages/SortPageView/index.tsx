@@ -30,13 +30,24 @@ const SortPageView = () => {
     SettingsRequests.getLocales(model).then(res => {
       setLocales(res.data);
     })
-    TreeRequests.getEntries(model, urlQuery.get('locale')).then(res => {
-      setEntries(res.data);
-      setIsLoading(false)      
+    SettingsRequests.getDisplayField(model).then(res => {
+      const displayField = res.data
+      TreeRequests.getEntries(model, urlQuery.get('locale')).then(res => {
+        setEntries(setItemsDisplayField(res.data, displayField));
+        setIsLoading(false)
+      })
     })
-
-
   }, [setEntries, setLocales]);
+
+  const setItemsDisplayField = (items: SortItem[], displayField: string): SortItem[] => {
+    items.forEach((item) => {
+      item.displayField = item[displayField] as string
+      if (item.children) {
+        item.children = setItemsDisplayField(item.children, displayField)
+      }
+    })
+    return items
+  }
 
   const handleSubmit = async () => {
     setIsSaving(true);    
@@ -77,7 +88,6 @@ const SortPageView = () => {
               <Button
                 onClick={handleSubmit}
                 startIcon={<Check />}
-                size="L"
                 disabled={isSaving}
                 loading={isSaving}
               >
