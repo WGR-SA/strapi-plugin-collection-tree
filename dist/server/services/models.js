@@ -33,7 +33,7 @@ exports.default = ({ strapi }) => ({
     async setModelMeta(meta) {
         var _a;
         const contentManagerStore = await ((_a = (0, serviceGetter_1.getPluginService)('models')) === null || _a === void 0 ? void 0 : _a.getContentManagerStore());
-        await contentManagerStore.set({ key: `configuration_content_types::${meta.uid}`, meta });
+        await contentManagerStore.set({ key: `configuration_content_types::${meta.uid}`, value: meta });
     },
     async getDisplayField(key) {
         var _a;
@@ -55,7 +55,7 @@ exports.default = ({ strapi }) => ({
         });
     },
     async addTreeFields(key) {
-        var _a;
+        var _a, _b, _c;
         const settings = await ((_a = (0, serviceGetter_1.getPluginService)('settings')) === null || _a === void 0 ? void 0 : _a.getSettings());
         Object.keys(attributes_default_1.default).forEach((field) => {
             if (attributes_default_1.default[field].target)
@@ -66,6 +66,17 @@ exports.default = ({ strapi }) => ({
                 attributes_default_1.default[field].inversedBy = settings.fieldname['children'];
             (0, schemaUpdate_1.default)().addAttribute(key, settings.fieldname[field], attributes_default_1.default[field]);
         });
+        let modelMeta = await ((_b = (0, serviceGetter_1.getPluginService)('models')) === null || _b === void 0 ? void 0 : _b.getModelMeta(key));
+        modelMeta.settings.defaultSortBy = settings.fieldname['lft'];
+        let rows = [];
+        modelMeta.layouts.edit.map((row) => {
+            const fields = row.filter((field) => ![settings.fieldname['lft'], settings.fieldname['rght'], settings.fieldname['children']].includes(field.name));
+            console.log(fields);
+            if (fields.length > 0)
+                rows.push(row);
+        });
+        modelMeta.layouts.edit = rows;
+        await ((_c = (0, serviceGetter_1.getPluginService)('models')) === null || _c === void 0 ? void 0 : _c.setModelMeta(modelMeta));
     },
     async removeTreeFields(key) {
         var _a;
@@ -84,7 +95,7 @@ exports.default = ({ strapi }) => ({
     //           [settings.fieldname["lft"]]: tree, 
     //           [settings.fieldname["rght"]]: tree + 1 
     //         }
-    //       });
+    //       })
     //       tree += 2
     //     } 
     //   })

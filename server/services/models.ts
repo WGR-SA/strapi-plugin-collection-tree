@@ -1,7 +1,8 @@
-import { Strapi } from '@strapi/strapi';
+import { Strapi } from '@strapi/strapi'
 import schemaUpdater from '../utils/schemaUpdate'
 import { getPluginService } from '../utils/serviceGetter'
 import attributes from '../config/attributes.default'
+import metadatas from '../config/metadatas.default'
  
 export default ({ strapi }: { strapi: Strapi }) => ({
   getModels() {
@@ -37,7 +38,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   async setModelMeta(meta: any) {
     const contentManagerStore = await getPluginService('models')?.getContentManagerStore()
 
-    await contentManagerStore.set({ key: `configuration_content_types::${meta.uid}`, meta})
+    await contentManagerStore.set({ key: `configuration_content_types::${meta.uid}`, value: meta })
   },
 
   async getDisplayField(key: string): Promise<string> {
@@ -68,8 +69,19 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       if (attributes[field].inversedBy) attributes[field].inversedBy = settings.fieldname['children']
 
       schemaUpdater().addAttribute(key, settings.fieldname[field], attributes[field])
-    });
+    })
 
+    let modelMeta = await getPluginService('models')?.getModelMeta(key)
+    modelMeta.settings.defaultSortBy = settings.fieldname['lft']
+    let rows: {name: string, size: number}[][] = []
+    modelMeta.layouts.edit.map((row) => {
+      const fields = row.filter((field) => ![settings.fieldname['lft'], settings.fieldname['rght'], settings.fieldname['children']].includes(field.name))
+      console.log(fields);
+      if (fields.length > 0) rows.push(row)
+    })
+    modelMeta.layouts.edit = rows
+    
+    await getPluginService('models')?.setModelMeta(modelMeta)
   },
 
   async removeTreeFields(key: string) {
@@ -92,9 +104,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   //           [settings.fieldname["lft"]]: tree, 
   //           [settings.fieldname["rght"]]: tree + 1 
   //         }
-  //       });
+  //       })
   //       tree += 2
   //     } 
   //   })
   // }
-});
+})

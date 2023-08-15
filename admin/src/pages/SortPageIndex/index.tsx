@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { Route, Switch } from 'react-router-dom'
 
-import { Layout } from '@strapi/design-system';
-import { LoadingIndicatorPage } from '@strapi/helper-plugin';
+import { Layout } from '@strapi/design-system'
+import { LoadingIndicatorPage } from '@strapi/helper-plugin'
 
-import pluginId from '../../pluginId';
-import SettingsRequests from '../../api/settings';
-import SortNav from '../../components/SortNav';
-import SortPageView from '../SortPageView';
-import SortPageInfo from '../SortPageInfo';
+import pluginId from '../../pluginId'
+import SettingsRequests from '../../api/settings'
+import SortNav from '../../components/SortNav'
+import SortPageView from '../SortPageView'
+import SortPageInfo from '../SortPageInfo'
 
 
 const SortPageIndex = () => {
-  const [settings, setSettings] = useState<{ models: string[] }>({ models: [] });
-  const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState<{ models: string[] }>({ models: [] })
+  const [isLoading, setIsLoading] = useState(true)
 
 
   useEffect(() => {
     SettingsRequests.getSettings().then(res => {
-      setSettings(res.data);
-      setIsLoading(false);
+      setSettings(res.data)
+      setIsLoading(false)
     })
-  }, [setSettings]);
+  }, [setSettings])
 
   if (isLoading) {
-    return <LoadingIndicatorPage />;
+    return <LoadingIndicatorPage />
   }
 
   return (
@@ -34,11 +34,11 @@ const SortPageIndex = () => {
         {settings.models.map((model) => {
           return (
             <Route path={`/plugins/${pluginId}/${model}`} key={model} component={SortPageView} exact />
-          );
-        })};        
+          )
+        })}
       </Switch>
     </Layout>
-  );
+  )
 }
 
-export default SortPageIndex;
+export default SortPageIndex

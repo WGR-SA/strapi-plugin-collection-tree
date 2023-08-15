@@ -4,9 +4,9 @@
  *
  */
 
-import React from 'react';
-import { Drag } from '@strapi/icons';
+import React from 'react'
+import { Drag } from '@strapi/icons'
 
-const PluginIcon = () => <Drag />;
+const PluginIcon = () => <Drag />
 
-export default PluginIcon;
+export default PluginIcon

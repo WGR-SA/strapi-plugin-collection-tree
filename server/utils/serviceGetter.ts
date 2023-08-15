@@ -1,6 +1,6 @@
-import { Strapi } from "@strapi/strapi";
+import { Strapi } from "@strapi/strapi"
 
-declare var strapi: Strapi;
+declare var strapi: Strapi
 
 export const getPluginService = (name: string) =>
-  strapi.service(`plugin::strapi-plugin-collection-tree.${name}`);
+  strapi.service(`plugin::strapi-plugin-collection-tree.${name}`)

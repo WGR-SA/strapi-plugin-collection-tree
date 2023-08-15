@@ -1,4 +1,4 @@
-import { Strapi } from '@strapi/strapi';
+import { Strapi } from '@strapi/strapi'
 import treeTransformer from '../utils/treeTransformer'
 import { getPluginService } from '../utils/serviceGetter'
 
@@ -30,7 +30,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       await strapi.db.query(`api::${data.key}.${data.key}`).update({
         where: { id: entry.id, },
         data: { [settings.fieldname["lft"]]: entry.lft, [settings.fieldname["rght"]]: entry.rght, [settings.fieldname["parent"]]: entry.parent }
-      });
+      })
     })
   },
-});
+})

@@ -4,13 +4,13 @@
  *
  */
 
-import React, { useState } from 'react';
-import { ReactSortable } from "react-sortablejs";
+import React, { useState } from 'react'
+import { ReactSortable } from "react-sortablejs"
 
 import { Box, Typography } from '@strapi/design-system'
-import { Drag } from '@strapi/icons';
+import { Drag } from '@strapi/icons'
 
-import type { SortItem } from '../../../../types';
+import type { SortItem } from '../../../../types'
 
 const sortableOptions = {
   animation: 150,
@@ -18,7 +18,7 @@ const sortableOptions = {
   swapThreshold: 0.65,
   ghostClass: "ghost",
   group: "shared"
-};
+}
 
 const SortElement = ({ entry }: { entry: SortItem }) => {
   const [entries, setEntries] = useState<SortItem[]>(entry.children)
@@ -60,7 +60,7 @@ const SortElement = ({ entry }: { entry: SortItem }) => {
       </ReactSortable>
       
     </Box>
-  );
+  )
 }
 
-export default SortElement;
+export default SortElement

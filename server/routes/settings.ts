@@ -19,4 +19,4 @@ export default [
     path: '/locales',
     handler: 'settingsController.getLocales',
   },
-];
+]

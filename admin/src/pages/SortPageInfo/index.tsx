@@ -1,12 +1,12 @@
-import React from "react";
-import { useIntl } from 'react-intl';
-import getTrad from '../../utils/getTrad';
+import React from "react"
+import { useIntl } from 'react-intl'
+import getTrad from '../../utils/getTrad'
 
 import { Main, ContentLayout, HeaderLayout, Typography, Box, Grid, GridItem } from '@strapi/design-system'
 
 
 const SortPageView = () => {
-  const { formatMessage } = useIntl();
+  const { formatMessage } = useIntl()
 
 
 
@@ -40,4 +40,4 @@ const SortPageView = () => {
   )
 }
 
-export default SortPageView;
+export default SortPageView

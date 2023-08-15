@@ -6,4 +6,4 @@ export default [
     ...modelRoutes,
     ...settingsRoutes,
     ...sortRoutes
-];
+]

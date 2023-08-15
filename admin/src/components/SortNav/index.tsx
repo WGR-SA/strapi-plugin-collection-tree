@@ -4,11 +4,11 @@
  *
  */
 
-import React from 'react';
+import React from 'react'
 
-import pluginId from '../../pluginId';
-import { useIntl } from 'react-intl';
-import getTrad from '../../utils/getTrad';
+import pluginId from '../../pluginId'
+import { useIntl } from 'react-intl'
+import getTrad from '../../utils/getTrad'
 
 import {
   SubNav,
@@ -16,7 +16,7 @@ import {
   SubNavSections,
   SubNavSection,
   SubNavLink
-} from '@strapi/design-system';
+} from '@strapi/design-system'
 
 
 const SortNav = ({ models }: { models: string[] }) => {

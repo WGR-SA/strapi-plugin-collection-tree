@@ -5,13 +5,13 @@
  */
 
 
-import React, { useEffect, useState } from 'react';
-import { LoadingIndicatorPage, useNotification } from '@strapi/helper-plugin';
-import { useIntl } from 'react-intl';
-import getTrad from '../../utils/getTrad';
-import SettingsRequests from '../../api/settings';
+import React, { useEffect, useState } from 'react'
+import { LoadingIndicatorPage, useNotification } from '@strapi/helper-plugin'
+import { useIntl } from 'react-intl'
+import getTrad from '../../utils/getTrad'
+import SettingsRequests from '../../api/settings'
 
-import type { CollectionTreeConfig  } from '../../../../types';
+import type { CollectionTreeConfig  } from '../../../../types'
 
 import {
   Box,
@@ -23,41 +23,41 @@ import {
   Typography,
   TextInput,
   ToggleInput
-} from '@strapi/design-system';
+} from '@strapi/design-system'
 
-import { Check } from '@strapi/icons';
+import { Check } from '@strapi/icons'
 
 const SettingsPage = () => {
-  const [models, setModels] = useState([]);
-  const [settings, setSettings] = useState<CollectionTreeConfig>({ models: [], fieldname: {lft: 'lft', rght: 'rght', parent: 'parent', children: 'children'}});
-  const [isSaving, setIsSaving] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const toggleNotification = useNotification(); 
-  const { formatMessage } = useIntl();
+  const [models, setModels] = useState([])
+  const [settings, setSettings] = useState<CollectionTreeConfig>({ models: [], fieldname: {lft: 'lft', rght: 'rght', parent: 'parent', children: 'children'}})
+  const [isSaving, setIsSaving] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const toggleNotification = useNotification() 
+  const { formatMessage } = useIntl()
 
   useEffect(() => {
     SettingsRequests.getModels().then(res => {      
-      setModels(res.data);
+      setModels(res.data)
     })
     SettingsRequests.getSettings().then(res => {
-      setSettings(res.data);
-      setIsLoading(false);
+      setSettings(res.data)
+      setIsLoading(false)
     })
-  }, [setModels, setSettings]);
+  }, [setModels, setSettings])
 
   
   const handleSubmit = async () => {
-    setIsSaving(true);    
-    const res = await SettingsRequests.setSettings( settings );
-    setIsSaving(false);
+    setIsSaving(true)    
+    const res = await SettingsRequests.setSettings( settings )
+    setIsSaving(false)
     toggleNotification({
       type: 'success',
       message: formatMessage({ id: getTrad('SettingsPage.Notification.message') }),
-    });
-  };
+    })
+  }
 
   if (isLoading) {
-    return <LoadingIndicatorPage />;
+    return <LoadingIndicatorPage />
   }
   
   return (
@@ -135,7 +135,7 @@ const SettingsPage = () => {
         </Box>
       </ContentLayout>
     </>
-  );
-};
+  )
+}
 
-export default SettingsPage;
+export default SettingsPage

@@ -4,15 +4,14 @@
  *
  */
 
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { SingleSelect, SingleSelectOption } from '@strapi/design-system'
 
-
 const SortLocaleSelect = ({ locales }: { locales: any }) => {
   const path = useLocation().pathname
-  const currentLocale = new URLSearchParams(useLocation().search).get('locale') ?? locales.find((locale) => locale.isDefault).code
+  const currentLocale = new URLSearchParams(useLocation().search).get('locale') ?? locales.find((locale) => locale.isDefault)?.code
 
   if (locales.length)
     return (

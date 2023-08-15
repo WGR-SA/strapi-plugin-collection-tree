@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = {
     lft: {
         type: 'integer',
-        default: null
+        default: null,
     },
     rght: {
         type: 'integer',
-        default: null
+        default: null,
     },
     parent: {
         type: "relation",
@@ -19,6 +19,6 @@ exports.default = {
         type: 'relation',
         relation: 'oneToMany',
         target: 'collection',
-        mappedBy: 'parent'
+        mappedBy: 'parent',
     }
 };

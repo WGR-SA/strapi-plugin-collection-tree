@@ -1,5 +1,5 @@
 
-import * as fs from 'fs';
+import * as fs from 'fs'
 
 const getSchemaPath = (model: string): string => {  
   return `./src/api/${model}/content-types/${model}/schema.json`

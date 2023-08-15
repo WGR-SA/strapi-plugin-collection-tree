@@ -1,11 +1,11 @@
 export default {
   lft: {
     type: 'integer',
-    default: null
+    default: null,
   },
   rght: {
     type: 'integer',
-    default: null
+    default: null,
   },
   parent: {
     type: "relation",
@@ -17,6 +17,6 @@ export default {
     type: 'relation',
     relation: 'oneToMany',
     target: 'collection',
-    mappedBy: 'parent'
+    mappedBy: 'parent',
   }
 }
