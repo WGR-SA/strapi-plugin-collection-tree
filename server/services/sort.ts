@@ -6,7 +6,7 @@ import type { SortItem, TreeItem } from '../../types'
 
 
 export default ({ strapi }: { strapi: Strapi }) => ({
-  async getEntries(key: string, locale?: string | null) {
+  async getEntries(key: string, locale?: string | null, sorted = true) {
     const settings = await getPluginService('settings')?.getSettings()
     const conditions = { sort: { [settings.fieldname["lft"]]: 'ASC' }, populate: settings.fieldname["parent"] }
     if (locale) conditions["locale"] = locale
@@ -15,7 +15,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     
     data.map((entry: any) => entry.parent = (entry[settings.fieldname["parent"]]) ? entry[settings.fieldname["parent"]]?.id : null)
     
-    return treeTransformer().treeToSort(data)
+    return (sorted) ? treeTransformer().treeToSort(data) : data
   },
   async updateEntries(data: { key: string, entries: SortItem[] }, sorted: boolean = true) {
     const settings = await getPluginService('settings')?.getSettings()
@@ -27,6 +27,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const tree = (sorted) ? treeTransformer().sortToTree(data.entries) : data.entries
 
     tree.forEach(async (entry: TreeItem) => {
+      // TODO don't trigger beforeUpdate lifecycle
       await strapi.db.query(`api::${data.key}.${data.key}`).update({
         where: { id: entry.id, },
         data: { [settings.fieldname["lft"]]: entry.lft, [settings.fieldname["rght"]]: entry.rght, [settings.fieldname["parent"]]: entry.parent, primary: false }
@@ -35,7 +36,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   async updateOnCreate(model: string, data: any) {    
     const settings = await getPluginService('settings')?.getSettings()
-    const items = await getPluginService('sort')?.getEntries(model, data.locale ?? null)
+    const items = await getPluginService('sort')?.getEntries(model, data.locale ?? null, false)
 
     if (data.parent.connect.length === 0) {
       const lastItem = items[items.length - 1]
@@ -43,7 +44,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       data[settings.fieldname["lft"]] = lastItem[settings.fieldname["rght"]] + 1
       data[settings.fieldname["rght"]] = lastItem[settings.fieldname["rght"]] + 2
     } else {
-      const parentId = data.parent.connect[0].id
+      const parentId = data[settings.fieldname["parent"]].connect[0].id
       const parent = items.find((item: any) => item.id === parentId)
       if (!parent) return
 
@@ -68,5 +69,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     return data
 
+  },
+  async updateOnUpdate(model: string, data: any) {
+    // TODO Update tree if parent has changed
+  },
+  async updateOnDelete(model: string) {
+    const items = await getPluginService('sort')?.getEntries(model)
+    await getPluginService('sort')?.updateEntries({ key: model, entries: items })    
   }
 })
