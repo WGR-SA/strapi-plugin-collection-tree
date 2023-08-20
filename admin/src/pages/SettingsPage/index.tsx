@@ -6,7 +6,8 @@
 
 
 import React, { useEffect, useState } from 'react'
-import { LoadingIndicatorPage, useNotification } from '@strapi/helper-plugin'
+import { LoadingIndicatorPage, useAutoReloadOverlayBlocker, useNotification } from '@strapi/helper-plugin'
+import serverRestartWatcher from '../../utils/serverRestartWatcher';
 import { useIntl } from 'react-intl'
 import getTrad from '../../utils/getTrad'
 import SettingsRequests from '../../api/settings'
@@ -28,6 +29,7 @@ import {
 import { Check } from '@strapi/icons'
 
 const SettingsPage = () => {
+  const { lockAppWithAutoreload, unlockAppWithAutoreload } = useAutoReloadOverlayBlocker();
   const [models, setModels] = useState([])
   const [settings, setSettings] = useState<CollectionTreeConfig>({ models: [], fieldname: {lft: 'lft', rght: 'rght', parent: 'parent', children: 'children'}})
   const [isSaving, setIsSaving] = useState(false)
@@ -48,12 +50,19 @@ const SettingsPage = () => {
   
   const handleSubmit = async () => {
     setIsSaving(true)    
+    
     const res = await SettingsRequests.setSettings( settings )
     setIsSaving(false)
-    toggleNotification({
-      type: 'success',
-      message: formatMessage({ id: getTrad('SettingsPage.Notification.message') }),
-    })
+    // toggleNotification({
+    //   type: 'success',
+    //   message: formatMessage({ id: getTrad('SettingsPage.Notification.message') }),
+    // })
+    lockAppWithAutoreload()
+     
+    await serverRestartWatcher(true, null);
+
+    // Unlock the app
+    await unlockAppWithAutoreload();
   }
 
   if (isLoading) {
