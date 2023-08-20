@@ -37,7 +37,8 @@ const SortElement = ({ entry }: { entry: SortItem }) => {
         flexDirection: 'column',
         gap: '0 .5rem',
         margin: '.5rem 0 0',
-        cursor: 'grab'
+        cursor: 'grab',
+        border: '1px solid #efefef',
       }}
     >
       <Typography

@@ -13,6 +13,7 @@ export interface TreeItem {
   lft: number,
   rght: number,
   parent: number | null,
+  depth?: number,
   [key: string]: unknown
 }
 
@@ -22,6 +23,7 @@ export interface SortItem {
   rght: number,
   parent: number | null,
   children: SortItem[],
+  depth: number,
   displayField?: string,
   [key: string]: unknown
 }

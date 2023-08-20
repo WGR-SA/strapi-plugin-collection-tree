@@ -6,7 +6,7 @@ export default () => ({
     let roots: SortItem[] = []
 
     for (let item of items) {
-      treeNodes[item.id] = { ...item, children: [] }
+      treeNodes[item.id] = { ...item, children: [], depth: 0 }
     }
 
     for (let item of items) {
@@ -14,6 +14,7 @@ export default () => ({
       if (item.parent !== null && item.parent !== undefined) {
         if (item.parent in treeNodes) {
           treeNodes[item.parent].children.push(node)
+          node.depth = treeNodes[item.parent].depth + 1
         }
       } else {
         roots.push(node)
@@ -26,12 +27,16 @@ export default () => ({
     let counter = 1
     let result: TreeItem[] = []
 
-    function dfs(node: SortItem, parent: number | null) {
+    function dfs(node: SortItem, parent: number | null, depth = 0) {
       node.lft = counter++
       node.parent = parent
 
+      if (node.children && node.children.length > 0) {
+        depth++
+      }
+
       for (let child of node.children) {
-        dfs(child, node.id)
+        dfs(child, node.id, depth)
       }
 
       node.rght = counter++
@@ -40,7 +45,8 @@ export default () => ({
         id: node.id,
         lft: node.lft as number,
         rght: node.rght as number,
-        parent: node.parent as number
+        parent: node.parent as number,
+        depth: depth,
       })
     }
 
