@@ -71,7 +71,6 @@ exports.default = ({ strapi }) => ({
         let rows = [];
         modelMeta.layouts.edit.map((row) => {
             const fields = row.filter((field) => ![settings.fieldname['lft'], settings.fieldname['rght'], settings.fieldname['children']].includes(field.name));
-            console.log(fields);
             if (fields.length > 0)
                 rows.push(row);
         });
