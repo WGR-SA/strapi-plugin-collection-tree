@@ -31,10 +31,9 @@ import { Check } from '@strapi/icons'
 const SettingsPage = () => {
   const { lockAppWithAutoreload, unlockAppWithAutoreload } = useAutoReloadOverlayBlocker();
   const [models, setModels] = useState([])
-  const [settings, setSettings] = useState<CollectionTreeConfig>({ models: [], fieldname: {lft: 'lft', rght: 'rght', parent: 'parent', children: 'children'}})
+  const [settings, setSettings] = useState<CollectionTreeConfig>({ models: [], fieldname: { lft: 'lft', rght: 'rght', parent: 'parent', children: 'children', tree: 'tree'}})
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const toggleNotification = useNotification() 
   const { formatMessage } = useIntl()
 
   useEffect(() => {
@@ -53,10 +52,6 @@ const SettingsPage = () => {
     
     const res = await SettingsRequests.setSettings( settings )
     setIsSaving(false)
-    // toggleNotification({
-    //   type: 'success',
-    //   message: formatMessage({ id: getTrad('SettingsPage.Notification.message') }),
-    // })
     lockAppWithAutoreload()
      
     await serverRestartWatcher(true, null);
@@ -139,6 +134,9 @@ const SettingsPage = () => {
             </GridItem>
             <GridItem col={6} s={12}>
               <TextInput label="Children" name="parent" onChange={(event) => setSettings({ ...settings, fieldname: { ...settings.fieldname, children: event.target.value } })} value={settings.fieldname.children} required />
+            </GridItem>
+            <GridItem col={6} s={12}>
+              <TextInput label="Tree Field" name="tree_field" onChange={(event) => setSettings({ ...settings, fieldname: { ...settings.fieldname, tree: event.target.value } })} value={settings.fieldname.tree} required />
             </GridItem>
           </Grid>
         </Box>

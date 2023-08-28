@@ -5,6 +5,7 @@ export type CollectionTreeConfig = {
     rght: string,
     parent: string,
     children: string,
+    tree: string
   }
 }
 

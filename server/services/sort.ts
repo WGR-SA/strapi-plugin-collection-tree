@@ -19,18 +19,46 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   async updateEntries(data: { key: string, entries: SortItem[] }, sorted: boolean = true) {
     const settings = await getPluginService('settings')?.getSettings()
+    const displayField = await getPluginService('models')?.getDisplayField(data.key)
+    const list = await getPluginService('sort')?.getEntries(data.key, null, false)
 
     if (data.entries.length === 0) {
-      data.entries = await getPluginService('sort')?.getEntries(data.key)
-    }
+      data.entries = list
+    }    
 
     const tree = (sorted) ? treeTransformer().sortToTree(data.entries) : data.entries
+
+    // Set Tree name
+    tree.map((entry: TreeItem) => {
+      let name = ''
+      let parent = entry.parent
+      while (parent !== null) {
+        const parentEntry = list.find((item: TreeItem) => item.id === parent)
+        if (parentEntry) {
+          name = `${parentEntry[displayField]} > ${name}`
+          parent = parentEntry.parent
+        } else {
+          parent = null
+        }
+      }
+      
+      const item = list.find((item: TreeItem) => item.id === entry.id)
+      entry.tree = `${name}${item[displayField]}`
+
+      return entry
+    })
 
     tree.forEach(async (entry: TreeItem) => {
       // TODO don't trigger beforeUpdate lifecycle
       await strapi.db.query(`api::${data.key}.${data.key}`).update({
         where: { id: entry.id, },
-        data: { [settings.fieldname["lft"]]: entry.lft, [settings.fieldname["rght"]]: entry.rght, [settings.fieldname["parent"]]: entry.parent, primary: false }
+        data: { 
+          [settings.fieldname["lft"]]: entry.lft, 
+          [settings.fieldname["rght"]]: entry.rght, 
+          [settings.fieldname["parent"]]: entry.parent, 
+          [settings.fieldname["tree"]]: entry.tree, 
+          primary: false 
+        }
       })
     })    
   },
@@ -74,7 +102,9 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     // TODO Update tree if parent has changed
   },
   async updateOnDelete(model: string) {
+    if (!model) return
     const items = await getPluginService('sort')?.getEntries(model)
+    if ( items.length === 0 ) return
     await getPluginService('sort')?.updateEntries({ key: model, entries: items })    
   }
 })

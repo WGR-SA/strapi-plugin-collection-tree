@@ -6,7 +6,8 @@ const config = {
         lft: "lft",
         rght: "rght",
         parent: "parent",
-        children: "children"
+        children: "children",
+        tree: "tree"
     }
 };
 exports.default = {

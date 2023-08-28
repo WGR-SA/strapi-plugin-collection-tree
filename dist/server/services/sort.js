@@ -17,17 +17,43 @@ exports.default = ({ strapi }) => ({
         return (sorted) ? (0, treeTransformer_1.default)().treeToSort(data) : data;
     },
     async updateEntries(data, sorted = true) {
-        var _a, _b;
+        var _a, _b, _c;
         const settings = await ((_a = (0, serviceGetter_1.getPluginService)('settings')) === null || _a === void 0 ? void 0 : _a.getSettings());
+        const displayField = await ((_b = (0, serviceGetter_1.getPluginService)('models')) === null || _b === void 0 ? void 0 : _b.getDisplayField(data.key));
+        const list = await ((_c = (0, serviceGetter_1.getPluginService)('sort')) === null || _c === void 0 ? void 0 : _c.getEntries(data.key, null, false));
         if (data.entries.length === 0) {
-            data.entries = await ((_b = (0, serviceGetter_1.getPluginService)('sort')) === null || _b === void 0 ? void 0 : _b.getEntries(data.key));
+            data.entries = list;
         }
         const tree = (sorted) ? (0, treeTransformer_1.default)().sortToTree(data.entries) : data.entries;
+        // Set Tree name
+        tree.map((entry) => {
+            let name = '';
+            let parent = entry.parent;
+            while (parent !== null) {
+                const parentEntry = list.find((item) => item.id === parent);
+                if (parentEntry) {
+                    name = `${parentEntry[displayField]} > ${name}`;
+                    parent = parentEntry.parent;
+                }
+                else {
+                    parent = null;
+                }
+            }
+            const item = list.find((item) => item.id === entry.id);
+            entry.tree = `${name}${item[displayField]}`;
+            return entry;
+        });
         tree.forEach(async (entry) => {
             // TODO don't trigger beforeUpdate lifecycle
             await strapi.db.query(`api::${data.key}.${data.key}`).update({
                 where: { id: entry.id, },
-                data: { [settings.fieldname["lft"]]: entry.lft, [settings.fieldname["rght"]]: entry.rght, [settings.fieldname["parent"]]: entry.parent, primary: false }
+                data: {
+                    [settings.fieldname["lft"]]: entry.lft,
+                    [settings.fieldname["rght"]]: entry.rght,
+                    [settings.fieldname["parent"]]: entry.parent,
+                    [settings.fieldname["tree"]]: entry.tree,
+                    primary: false
+                }
             });
         });
     },
@@ -68,7 +94,11 @@ exports.default = ({ strapi }) => ({
     },
     async updateOnDelete(model) {
         var _a, _b;
+        if (!model)
+            return;
         const items = await ((_a = (0, serviceGetter_1.getPluginService)('sort')) === null || _a === void 0 ? void 0 : _a.getEntries(model));
+        if (items.length === 0)
+            return;
         await ((_b = (0, serviceGetter_1.getPluginService)('sort')) === null || _b === void 0 ? void 0 : _b.updateEntries({ key: model, entries: items }));
     }
 });

@@ -18,5 +18,9 @@ export default {
     relation: 'oneToMany',
     target: 'collection',
     mappedBy: 'parent',
-  }
+  },
+  tree: {
+    type: 'string',
+    default: null,
+  },
 }
