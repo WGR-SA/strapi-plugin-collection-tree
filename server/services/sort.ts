@@ -30,20 +30,8 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     // Set Tree name
     tree.map((entry: TreeItem) => {
-      let name = ''
-      let parent = entry.parent
-      while (parent !== null) {
-        const parentEntry = list.find((item: TreeItem) => item.id === parent)
-        if (parentEntry) {
-          name = `${parentEntry[displayField]} > ${name}`
-          parent = parentEntry.parent
-        } else {
-          parent = null
-        }
-      }
-      
       const item = list.find((item: TreeItem) => item.id === entry.id)
-      entry.tree = `${name}${item[displayField]}`
+      entry.tree = getPluginService('sort')?.getTreeName(item, list, displayField)
 
       return entry
     })
@@ -64,13 +52,22 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   async updateOnCreate(model: string, data: any) {    
     const settings = await getPluginService('settings')?.getSettings()
+    const displayField = await getPluginService('models')?.getDisplayField(model)
     const items = await getPluginService('sort')?.getEntries(model, data.locale ?? null, false)
 
+    if (items.length === 0) {
+      data[settings.fieldname["lft"]] = 1
+      data[settings.fieldname["rght"]] = 2
+      data.tree = data[displayField]
+
+      return data
+    } 
     if (data.parent.connect.length === 0) {
       const lastItem = items[items.length - 1]
 
       data[settings.fieldname["lft"]] = lastItem[settings.fieldname["rght"]] + 1
       data[settings.fieldname["rght"]] = lastItem[settings.fieldname["rght"]] + 2
+      data.tree = data[displayField]
     } else {
       const parentId = data[settings.fieldname["parent"]].connect[0].id
       const parent = items.find((item: any) => item.id === parentId)
@@ -79,7 +76,8 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       // place new item in tree
       data[settings.fieldname["lft"]] = parent[settings.fieldname["rght"]]
       data[settings.fieldname["rght"]] = parent[settings.fieldname["rght"]] + 1
-
+      data.tree = getPluginService('sort')?.getTreeName(getPluginService('sort')?.mapDataToTreeItem(data, settings), items, displayField)
+    
       // make place for new item
       const newData = items.map((item: any) => {
         if (item.id === parentId) {
@@ -96,7 +94,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     }  
 
     return data
-
   },
   async updateOnUpdate(model: string, data: any) {
     // TODO Update tree if parent has changed
@@ -106,5 +103,30 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const items = await getPluginService('sort')?.getEntries(model)
     if ( items.length === 0 ) return
     await getPluginService('sort')?.updateEntries({ key: model, entries: items })    
+  },
+  mapDataToTreeItem(entry: any, settings: any) {
+    return {
+      ...entry,
+      id: entry.id,
+      lft: entry[settings.fieldname["lft"]],
+      rght: entry[settings.fieldname["rght"]],
+      parent: entry[settings.fieldname["parent"]].connect.length > 0 ? entry[settings.fieldname["parent"]].connect[0].id : null,
+      tree: entry[settings.fieldname["tree"]]
+    }
+  },
+  getTreeName (entry: TreeItem, list: TreeItem[], displayField: string) {
+    let name = ''
+    let parent = entry.parent
+    while (parent !== null) {
+      const parentEntry = list.find((item: TreeItem) => item.id === parent)
+      if (parentEntry) {
+        name = `${parentEntry[displayField]} > ${name}`
+        parent = parentEntry.parent
+      } else {
+        parent = null
+      }
+    }
+    
+    return `${name}${entry[displayField]}`
   }
 })

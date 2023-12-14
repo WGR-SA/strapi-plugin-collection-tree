@@ -27,20 +27,9 @@ exports.default = ({ strapi }) => ({
         const tree = (sorted) ? (0, treeTransformer_1.default)().sortToTree(data.entries) : data.entries;
         // Set Tree name
         tree.map((entry) => {
-            let name = '';
-            let parent = entry.parent;
-            while (parent !== null) {
-                const parentEntry = list.find((item) => item.id === parent);
-                if (parentEntry) {
-                    name = `${parentEntry[displayField]} > ${name}`;
-                    parent = parentEntry.parent;
-                }
-                else {
-                    parent = null;
-                }
-            }
+            var _a;
             const item = list.find((item) => item.id === entry.id);
-            entry.tree = `${name}${item[displayField]}`;
+            entry.tree = (_a = (0, serviceGetter_1.getPluginService)('sort')) === null || _a === void 0 ? void 0 : _a.getTreeName(item, list, displayField);
             return entry;
         });
         tree.forEach(async (entry) => {
@@ -58,13 +47,21 @@ exports.default = ({ strapi }) => ({
         });
     },
     async updateOnCreate(model, data) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e, _f, _g;
         const settings = await ((_a = (0, serviceGetter_1.getPluginService)('settings')) === null || _a === void 0 ? void 0 : _a.getSettings());
-        const items = await ((_b = (0, serviceGetter_1.getPluginService)('sort')) === null || _b === void 0 ? void 0 : _b.getEntries(model, (_c = data.locale) !== null && _c !== void 0 ? _c : null, false));
+        const displayField = await ((_b = (0, serviceGetter_1.getPluginService)('models')) === null || _b === void 0 ? void 0 : _b.getDisplayField(model));
+        const items = await ((_c = (0, serviceGetter_1.getPluginService)('sort')) === null || _c === void 0 ? void 0 : _c.getEntries(model, (_d = data.locale) !== null && _d !== void 0 ? _d : null, false));
+        if (items.length === 0) {
+            data[settings.fieldname["lft"]] = 1;
+            data[settings.fieldname["rght"]] = 2;
+            data.tree = data[displayField];
+            return data;
+        }
         if (data.parent.connect.length === 0) {
             const lastItem = items[items.length - 1];
             data[settings.fieldname["lft"]] = lastItem[settings.fieldname["rght"]] + 1;
             data[settings.fieldname["rght"]] = lastItem[settings.fieldname["rght"]] + 2;
+            data.tree = data[displayField];
         }
         else {
             const parentId = data[settings.fieldname["parent"]].connect[0].id;
@@ -74,6 +71,7 @@ exports.default = ({ strapi }) => ({
             // place new item in tree
             data[settings.fieldname["lft"]] = parent[settings.fieldname["rght"]];
             data[settings.fieldname["rght"]] = parent[settings.fieldname["rght"]] + 1;
+            data.tree = (_e = (0, serviceGetter_1.getPluginService)('sort')) === null || _e === void 0 ? void 0 : _e.getTreeName((_f = (0, serviceGetter_1.getPluginService)('sort')) === null || _f === void 0 ? void 0 : _f.mapDataToTreeItem(data, settings), items, displayField);
             // make place for new item
             const newData = items.map((item) => {
                 if (item.id === parentId) {
@@ -85,7 +83,7 @@ exports.default = ({ strapi }) => ({
                 }
                 return item;
             });
-            await ((_d = (0, serviceGetter_1.getPluginService)('sort')) === null || _d === void 0 ? void 0 : _d.updateEntries({ key: model, entries: newData }, false));
+            await ((_g = (0, serviceGetter_1.getPluginService)('sort')) === null || _g === void 0 ? void 0 : _g.updateEntries({ key: model, entries: newData }, false));
         }
         return data;
     },
@@ -100,5 +98,30 @@ exports.default = ({ strapi }) => ({
         if (items.length === 0)
             return;
         await ((_b = (0, serviceGetter_1.getPluginService)('sort')) === null || _b === void 0 ? void 0 : _b.updateEntries({ key: model, entries: items }));
+    },
+    mapDataToTreeItem(entry, settings) {
+        return {
+            ...entry,
+            id: entry.id,
+            lft: entry[settings.fieldname["lft"]],
+            rght: entry[settings.fieldname["rght"]],
+            parent: entry[settings.fieldname["parent"]].connect.length > 0 ? entry[settings.fieldname["parent"]].connect[0].id : null,
+            tree: entry[settings.fieldname["tree"]]
+        };
+    },
+    getTreeName(entry, list, displayField) {
+        let name = '';
+        let parent = entry.parent;
+        while (parent !== null) {
+            const parentEntry = list.find((item) => item.id === parent);
+            if (parentEntry) {
+                name = `${parentEntry[displayField]} > ${name}`;
+                parent = parentEntry.parent;
+            }
+            else {
+                parent = null;
+            }
+        }
+        return `${name}${entry[displayField]}`;
     }
 });
