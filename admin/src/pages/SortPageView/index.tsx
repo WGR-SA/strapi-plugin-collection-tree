@@ -51,7 +51,7 @@ const SortPageView = () => {
 
   const handleSubmit = async () => {
     setIsSaving(true)    
-    await TreeRequests.saveEntries({ key: model, entries: entries })
+    await TreeRequests.saveEntries({ key: model, entries: entries, locale: urlQuery.get('locale') })
     setIsSaving(false)
     toggleNotification({
       type: 'success',

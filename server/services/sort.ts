@@ -19,20 +19,20 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     
     return (sorted) ? treeTransformer().treeToSort(data) : data
   },
-  async updateEntries(data: { key: string, entries: SortItem[] }, sorted: boolean = true) {
+  async updateEntries(data: { key: string, entries: SortItem[], locale: string | null }, sorted: boolean = true) {
     const settings = await getPluginService('settings')?.getSettings()
     const displayField = await getPluginService('models')?.getDisplayField(data.key)
-    const list = await getPluginService('sort')?.getEntries(data.key, null, false)
-    const { lft, rght, parent, tree } = settings.fieldname
+    const list = await getPluginService('sort')?.getEntries(data.key, data.locale, false)
+    const { lft, rght, parent, tree } = settings.fieldname    
 
     if (data.entries.length === 0) {
       data.entries = list
     }    
 
-    const treeData = (sorted) ? treeTransformer().sortToTree(data.entries) : data.entries
+    const treeData = (sorted) ? treeTransformer().sortToTree(data.entries) : data.entries    
 
     // Set Tree name
-    treeData.map((entry: TreeItem) => {
+    treeData.map((entry: TreeItem) => {      
       const item = list.find((item: TreeItem) => item.id === entry.id)
       entry.tree = getPluginService('sort')?.getTreeName(item, list, displayField)
 
@@ -54,7 +54,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       })
     })    
   },
-  async updateOnCreate(model: string, data: any) {    
+  async updateOnCreate(model: string, data: any) {        
     const settings = await getPluginService('settings')?.getSettings()
     const displayField = await getPluginService('models')?.getDisplayField(model)
     const items = await getPluginService('sort')?.getEntries(model, data.locale ?? null, false)
@@ -64,7 +64,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       return getPluginService('sort')?.hangItem(data, settings, data[displayField], 0)
     } 
     if (data.parent.connect.length === 0) {
-      return getPluginService('sort')?.hangItem(data, settings, data[displayField], items[items.length - 1])
+      return getPluginService('sort')?.hangItem(data, settings, data[displayField], items[items.length - 1].lft)
     } else {
       const parentId = data[parent].connect[0].id
       const parentItem = items.find((item: any) => item.id === parentId)
@@ -74,7 +74,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       data = getPluginService('sort')?.hangItem(data, settings, treeName, parentItem[rght] - 1)
     
       const updatedItems = getPluginService('sort')?.pushItems(items, settings, parentId, data[lft])
-      await getPluginService('sort')?.updateEntries({ key: model, entries: updatedItems }, false)
+      await getPluginService('sort')?.updateEntries({ key: model, entries: updatedItems, locale: data.locale ?? null }, false)
     }  
 
     return data
@@ -84,11 +84,10 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const displayField = await getPluginService('models')?.getDisplayField(model)
     const items = await getPluginService('sort')?.getEntries(model, data.locale ?? null, false)
     const item = items.find((item: any) => item.id === data.id)
-    const { lft, rght, parent } = settings.fieldname
+    const { lft, rght, parent } = settings.fieldname    
 
-    if (data[parent].connect.length > 0) {
+    if (data[parent]?.connect?.length > 0) {
       if (data[parent].connect[0].id !== item[parent].id) {
-
         const parentId = data[parent].connect[0].id
         const parentItem = items.find((item: any) => item.id === parentId)
         if (!parentItem) return
@@ -97,7 +96,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         data = getPluginService('sort')?.hangItem(data, settings, treeName, parentItem[rght] - 1)
 
         const updatedItems = getPluginService('sort')?.pushItems(items, settings, parentId, data[lft])
-        await getPluginService('sort')?.updateEntries({ key: model, entries: updatedItems }, false)
+        await getPluginService('sort')?.updateEntries({ key: model, entries: updatedItems, locale: data.locale ?? null }, false)
       }
     }
 
@@ -111,6 +110,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
   hangItem (data: any, settings: any, treeName: string, base: number = 0) {
     const { lft, rght } = settings.fieldname
+    
     data[lft] = base + 1
     data[rght] = base + 2
     data.tree = treeName
@@ -137,14 +137,15 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       id: entry.id,
       lft: entry[lft],
       rght: entry[rght],
-      parent: entry[parent].connect.length > 0 ? entry[parent].connect[0].id : null,
+      parent: entry[parent]?.connect?.length > 0 ? entry[parent].connect[0].id : null,
       tree: entry[tree]
     }
   },
   getTreeName (entry: TreeItem, list: TreeItem[], displayField: string) {
-    let name = ''
-    let parent = entry.parent
-    while (parent !== null) {
+    let name = ''        
+    let parent = entry?.parent ?? null
+    
+    while ( parent !== null) {
       const parentEntry = list.find((item: TreeItem) => item.id === parent)
       if (parentEntry) {
         name = `${parentEntry[displayField]} > ${name}`
