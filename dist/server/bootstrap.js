@@ -12,7 +12,7 @@ exports.default = async ({ strapi }) => {
         await ((_b = (0, serviceGetter_1.getPluginService)('settings')) === null || _b === void 0 ? void 0 : _b.setSettings(config_1.default.default));
     await ((_c = (0, serviceGetter_1.getPluginService)('models')) === null || _c === void 0 ? void 0 : _c.manageTreeFields());
     strapi.db.lifecycles.subscribe(async (event) => {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e;
         if (event.action === 'beforeCreate') {
             const { data } = event.params;
             const model = event.model.uid.split('.').pop();
@@ -24,14 +24,15 @@ exports.default = async ({ strapi }) => {
             const { data } = event.params;
             const model = event.model.uid.split('.').pop();
             if (settings.models.includes(model)) {
-                event.params.data = await ((_b = (0, serviceGetter_1.getPluginService)('sort')) === null || _b === void 0 ? void 0 : _b.updateOnUpdate(model, data));
+                const current = await ((_b = strapi.service(event.model.uid)) === null || _b === void 0 ? void 0 : _b.findOne((_c = event.params.where) === null || _c === void 0 ? void 0 : _c.id));
+                event.params.data = await ((_d = (0, serviceGetter_1.getPluginService)('sort')) === null || _d === void 0 ? void 0 : _d.updateOnUpdate(model, data, current.locale));
             }
         }
         if (event.action === 'afterDelete') {
             const model = event.model.uid.split('.').pop();
             if (settings.models.includes(model)) {
                 //@ts-ignore
-                await ((_c = (0, serviceGetter_1.getPluginService)('sort')) === null || _c === void 0 ? void 0 : _c.updateOnDelete(model, event.result));
+                await ((_e = (0, serviceGetter_1.getPluginService)('sort')) === null || _e === void 0 ? void 0 : _e.updateOnDelete(model, event.result));
             }
         }
     });

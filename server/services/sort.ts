@@ -12,7 +12,6 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const conditions = { sort: { [lft]: 'ASC' }, populate: parent }
     if (locale) conditions["locale"] = locale
 
-    //@ts-ignore
     const data: any = await strapi.entityService.findMany(`api::${key}.${key}`, conditions)        
     
     data.map((entry: any) => entry.parent = (entry[settings.fieldname["parent"]]) ? entry[settings.fieldname["parent"]]?.id : null)
@@ -56,7 +55,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const settings = await getPluginService('settings')?.getSettings()
     const displayField = await getPluginService('models')?.getDisplayField(model)
     const items = await this.getEntries(model, data.locale ?? null, false)
-    const { lft, rght, parent, tree } = settings.fieldname
+    const { lft, rght, tree } = settings.fieldname
 
     // Push data to tree and sort
     items.push(this.mapDataToTreeItem(data, settings))
@@ -74,14 +73,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     return data
   },
-  async updateOnUpdate(model: string, data: any) {
+  async updateOnUpdate(model: string, data: any, locale?: string | null) {
     
     const settings = await getPluginService('settings')?.getSettings()    
     const displayField = await getPluginService('models')?.getDisplayField(model)
-    const items = await this.getEntries(model, data.locale ?? null, false)
+    const items = await this.getEntries(model, locale, false)
     const item = items.find((item: any) => item.id === data.id)
     const { lft, rght, parent, tree } = settings.fieldname
-
+    
     if (data[parent]?.connect?.length > 0) {
       if (data[parent].connect[0].id !== item[parent]?.id) {
 
@@ -98,7 +97,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         data[tree] = this.getTreeName(this.mapDataToTreeItem(data, settings), items, displayField)        
 
         // Update other tree items
-        await this.updateEntries({ key: model, entries: treeData.filter((item) => item.id != data.id), locale: data.locale ?? null }, false)
+        await this.updateEntries({ key: model, entries: treeData.filter((item) => item.id != data.id), locale: locale }, false)
       }
     }
 

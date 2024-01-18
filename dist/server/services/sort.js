@@ -13,7 +13,6 @@ exports.default = ({ strapi }) => ({
         const conditions = { sort: { [lft]: 'ASC' }, populate: parent };
         if (locale)
             conditions["locale"] = locale;
-        //@ts-ignore
         const data = await strapi.entityService.findMany(`api::${key}.${key}`, conditions);
         data.map((entry) => { var _a; return entry.parent = (entry[settings.fieldname["parent"]]) ? (_a = entry[settings.fieldname["parent"]]) === null || _a === void 0 ? void 0 : _a.id : null; });
         return (sorted) ? (0, treeTransformer_1.default)().treeToSort(data) : data;
@@ -52,7 +51,7 @@ exports.default = ({ strapi }) => ({
         const settings = await ((_a = (0, serviceGetter_1.getPluginService)('settings')) === null || _a === void 0 ? void 0 : _a.getSettings());
         const displayField = await ((_b = (0, serviceGetter_1.getPluginService)('models')) === null || _b === void 0 ? void 0 : _b.getDisplayField(model));
         const items = await this.getEntries(model, (_c = data.locale) !== null && _c !== void 0 ? _c : null, false);
-        const { lft, rght, parent, tree } = settings.fieldname;
+        const { lft, rght, tree } = settings.fieldname;
         // Push data to tree and sort
         items.push(this.mapDataToTreeItem(data, settings));
         const sortedItems = (0, treeTransformer_1.default)().treeToSort(items);
@@ -66,15 +65,15 @@ exports.default = ({ strapi }) => ({
         await this.updateEntries({ key: model, entries: treeData.filter((item) => item.id !== data.id), locale: (_d = data.locale) !== null && _d !== void 0 ? _d : null }, false);
         return data;
     },
-    async updateOnUpdate(model, data) {
-        var _a, _b, _c, _d, _e, _f, _g;
+    async updateOnUpdate(model, data, locale) {
+        var _a, _b, _c, _d, _e;
         const settings = await ((_a = (0, serviceGetter_1.getPluginService)('settings')) === null || _a === void 0 ? void 0 : _a.getSettings());
         const displayField = await ((_b = (0, serviceGetter_1.getPluginService)('models')) === null || _b === void 0 ? void 0 : _b.getDisplayField(model));
-        const items = await this.getEntries(model, (_c = data.locale) !== null && _c !== void 0 ? _c : null, false);
+        const items = await this.getEntries(model, locale, false);
         const item = items.find((item) => item.id === data.id);
         const { lft, rght, parent, tree } = settings.fieldname;
-        if (((_e = (_d = data[parent]) === null || _d === void 0 ? void 0 : _d.connect) === null || _e === void 0 ? void 0 : _e.length) > 0) {
-            if (data[parent].connect[0].id !== ((_f = item[parent]) === null || _f === void 0 ? void 0 : _f.id)) {
+        if (((_d = (_c = data[parent]) === null || _c === void 0 ? void 0 : _c.connect) === null || _d === void 0 ? void 0 : _d.length) > 0) {
+            if (data[parent].connect[0].id !== ((_e = item[parent]) === null || _e === void 0 ? void 0 : _e.id)) {
                 // Push data to tree and sort
                 const treeItems = items.filter((item) => item.id != data.id);
                 treeItems.push(this.mapDataToTreeItem(data, settings));
@@ -86,7 +85,7 @@ exports.default = ({ strapi }) => ({
                 data[rght] = treeItem === null || treeItem === void 0 ? void 0 : treeItem.rght;
                 data[tree] = this.getTreeName(this.mapDataToTreeItem(data, settings), items, displayField);
                 // Update other tree items
-                await this.updateEntries({ key: model, entries: treeData.filter((item) => item.id != data.id), locale: (_g = data.locale) !== null && _g !== void 0 ? _g : null }, false);
+                await this.updateEntries({ key: model, entries: treeData.filter((item) => item.id != data.id), locale: locale }, false);
             }
         }
         return data;

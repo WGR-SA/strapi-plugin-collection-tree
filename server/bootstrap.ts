@@ -16,12 +16,14 @@ export default async ({ strapi }: { strapi: Strapi }) => {
         event.params.data = await getPluginService('sort')?.updateOnCreate(model, data)
       }
     }
-    if (event.action === 'beforeUpdate') {
+    if (event.action === 'beforeUpdate') {      
       const { data } = event.params
-      const model = event.model.uid.split('.').pop()
+      const model = event.model.uid.split('.').pop()      
 
       if (settings.models.includes(model)) {
-        event.params.data = await getPluginService('sort')?.updateOnUpdate(model, data)
+        const current = await strapi.service(event.model.uid)?.findOne(event.params.where?.id)
+        
+        event.params.data = await getPluginService('sort')?.updateOnUpdate(model, data, current.locale) 
       }
     }
     if (event.action === 'afterDelete') {
