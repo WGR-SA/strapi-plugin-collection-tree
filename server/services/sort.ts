@@ -56,14 +56,14 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const settings = await getPluginService('settings')?.getSettings()
     const displayField = await getPluginService('models')?.getDisplayField(model)
     const items = await this.getEntries(model, data.locale ?? null, false)
-    const { lft, rght, parent, tree } = await getPluginService('settings')?.getSettings().fieldname
+    const { lft, rght, parent, tree } = settings.fieldname
 
     // Push data to tree and sort
     items.push(this.mapDataToTreeItem(data, settings))
     const sortedItems = treeTransformer().treeToSort(items)
     let treeData = treeTransformer().sortToTree(sortedItems)
 
-    // extact tree position and update data
+    // extract tree position and update data
     const treeItem = treeData.find((item: any) => item.id === data.id)
     data[lft] = treeItem?.lft
     data[rght] = treeItem?.rght
@@ -91,7 +91,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
         const sortedItems = treeTransformer().treeToSort(treeItems)
         let treeData = treeTransformer().sortToTree(sortedItems)
 
-        // extact tree position and update data
+        // extract tree position and update data
         const treeItem = treeData.find((item: any) => item.id === data.id)        
         data[lft] = treeItem?.lft
         data[rght] = treeItem?.rght

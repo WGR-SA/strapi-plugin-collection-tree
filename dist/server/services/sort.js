@@ -48,22 +48,22 @@ exports.default = ({ strapi }) => ({
         });
     },
     async updateOnCreate(model, data) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d;
         const settings = await ((_a = (0, serviceGetter_1.getPluginService)('settings')) === null || _a === void 0 ? void 0 : _a.getSettings());
         const displayField = await ((_b = (0, serviceGetter_1.getPluginService)('models')) === null || _b === void 0 ? void 0 : _b.getDisplayField(model));
         const items = await this.getEntries(model, (_c = data.locale) !== null && _c !== void 0 ? _c : null, false);
-        const { lft, rght, parent, tree } = await ((_d = (0, serviceGetter_1.getPluginService)('settings')) === null || _d === void 0 ? void 0 : _d.getSettings().fieldname);
+        const { lft, rght, parent, tree } = settings.fieldname;
         // Push data to tree and sort
         items.push(this.mapDataToTreeItem(data, settings));
         const sortedItems = (0, treeTransformer_1.default)().treeToSort(items);
         let treeData = (0, treeTransformer_1.default)().sortToTree(sortedItems);
-        // extact tree position and update data
+        // extract tree position and update data
         const treeItem = treeData.find((item) => item.id === data.id);
         data[lft] = treeItem === null || treeItem === void 0 ? void 0 : treeItem.lft;
         data[rght] = treeItem === null || treeItem === void 0 ? void 0 : treeItem.rght;
         data[tree] = this.getTreeName(this.mapDataToTreeItem(data, settings), items, displayField);
         // Update other tree items
-        await this.updateEntries({ key: model, entries: treeData.filter((item) => item.id !== data.id), locale: (_e = data.locale) !== null && _e !== void 0 ? _e : null }, false);
+        await this.updateEntries({ key: model, entries: treeData.filter((item) => item.id !== data.id), locale: (_d = data.locale) !== null && _d !== void 0 ? _d : null }, false);
         return data;
     },
     async updateOnUpdate(model, data) {
@@ -80,7 +80,7 @@ exports.default = ({ strapi }) => ({
                 treeItems.push(this.mapDataToTreeItem(data, settings));
                 const sortedItems = (0, treeTransformer_1.default)().treeToSort(treeItems);
                 let treeData = (0, treeTransformer_1.default)().sortToTree(sortedItems);
-                // extact tree position and update data
+                // extract tree position and update data
                 const treeItem = treeData.find((item) => item.id === data.id);
                 data[lft] = treeItem === null || treeItem === void 0 ? void 0 : treeItem.lft;
                 data[rght] = treeItem === null || treeItem === void 0 ? void 0 : treeItem.rght;
