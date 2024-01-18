@@ -28,9 +28,10 @@ exports.default = async ({ strapi }) => {
             }
         }
         if (event.action === 'afterDelete') {
+            const { data } = event.params;
             const model = event.model.uid.split('.').pop();
             if (settings.models.includes(model)) {
-                await ((_c = (0, serviceGetter_1.getPluginService)('sort')) === null || _c === void 0 ? void 0 : _c.updateOnDelete(model));
+                await ((_c = (0, serviceGetter_1.getPluginService)('sort')) === null || _c === void 0 ? void 0 : _c.updateOnDelete(model, data));
             }
         }
     });

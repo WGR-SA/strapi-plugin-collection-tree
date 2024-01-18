@@ -25,9 +25,10 @@ export default async ({ strapi }: { strapi: Strapi }) => {
       }
     }
     if (event.action === 'afterDelete') {
+      const { data } = event.params
       const model = event.model.uid.split('.').pop()
       if (settings.models.includes(model)) {
-        await getPluginService('sort')?.updateOnDelete(model)
+        await getPluginService('sort')?.updateOnDelete(model, data)
       }
     }
   })
