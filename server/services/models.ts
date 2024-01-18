@@ -29,20 +29,20 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   },
 
   async getModelMeta (key: string) {
-    const contentManagerStore = await getPluginService('models')?.getContentManagerStore()
+    const contentManagerStore = await this.getContentManagerStore()
     const modelMeta = await contentManagerStore.get({ key: `configuration_content_types::api::${key}.${key}` })
 
     return modelMeta
   },
 
   async setModelMeta(meta: any) {
-    const contentManagerStore = await getPluginService('models')?.getContentManagerStore()
+    const contentManagerStore = await this.getContentManagerStore()
 
     await contentManagerStore.set({ key: `configuration_content_types::${meta.uid}`, value: meta })
   },
 
   async getDisplayField(key: string): Promise<string> {
-    const modelMeta = await getPluginService('models')?.getModelMeta(key)
+    const modelMeta = await this.getModelMeta(key)
 
     return modelMeta.settings.mainField
   },
@@ -50,12 +50,11 @@ export default ({ strapi }: { strapi: Strapi }) => ({
   async manageTreeFields(models: string[]) {
     const settings = await getPluginService('settings')?.getSettings()
     
-    getPluginService('models')?.getModels().forEach((key) => {
+    this.getModels().forEach((key) => {
       if (settings.models.includes(key)) {
-        getPluginService('models')?.addTreeFields(key)
-        //getPluginService('models')?.recoverTree(key)
+        this.addTreeFields(key)
       } else {
-        getPluginService('models')?.removeTreeFields(key)
+        this.removeTreeFields(key)
       }
     })
   },
@@ -71,7 +70,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
       schemaUpdater().addAttribute(key, settings.fieldname[field], attributes[field])
     })
 
-    let modelMeta = await getPluginService('models')?.getModelMeta(key)
+    let modelMeta = await this.getModelMeta(key)
     modelMeta.settings.defaultSortBy = settings.fieldname['lft']
     let rows: {name: string, size: number}[][] = []
     modelMeta.layouts.edit.map((row) => {
@@ -80,7 +79,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     })
     modelMeta.layouts.edit = rows
     
-    await getPluginService('models')?.setModelMeta(modelMeta)
+    await this.setModelMeta(modelMeta)
   },
 
   async removeTreeFields(key: string) {
@@ -88,24 +87,4 @@ export default ({ strapi }: { strapi: Strapi }) => ({
 
     Object.keys(attributes).forEach((field) => schemaUpdater().removeAttribute(key, settings.fieldname[field]))
   },
-
-  // async recoverTree(key: string) {
-  //   const settings = await getPluginService('settings')?.getSettings()
-
-  //   const entries = await strapi.db.query(`api::${key}.${key}`).findMany({ select: ['id', settings.fieldname["lft"]], where: {}, orderBy: { id: 'asc' } })
-  //   let tree = 1
-    
-  //   entries.forEach(async (entry: TreeItem) => {
-  //     if (entry.lft === null || entry.lft === undefined) {
-  //       strapi.db.query(`api::${key}.${key}`).update({
-  //         where: { id: entry.id, },
-  //         data: { 
-  //           [settings.fieldname["lft"]]: tree, 
-  //           [settings.fieldname["rght"]]: tree + 1 
-  //         }
-  //       })
-  //       tree += 2
-  //     } 
-  //   })
-  // }
 })

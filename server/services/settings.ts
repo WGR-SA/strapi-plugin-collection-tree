@@ -11,12 +11,12 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     return await strapi.store({ environment: '', type: 'plugin', name: 'i18n' })
   },
   async getSettings() {
-    const store = await getPluginService('settings')?.getPluginStore()
+    const store = await this.getPluginStore()
     
     return await store.get({ key: 'settings' })
   },
   async setSettings(settings: CollectionTreeConfig) {
-    const store = await getPluginService('settings')?.getPluginStore()
+    const store = await this.getPluginStore()
     
     await store.set({ key: 'settings', value: settings })
     await getPluginService('models')?.manageTreeFields()
@@ -25,7 +25,7 @@ export default ({ strapi }: { strapi: Strapi }) => ({
     const localized = getPluginService('models')?.isLocalized(model) 
     if (!localized) return []
 
-    const intlStore = await getPluginService('settings')?.getIntlStore()
+    const intlStore = await this.getIntlStore()
     const defaultLocale = await intlStore.get({ key: 'default_locale' })    
     const data = await strapi.entityService.findMany('plugin::i18n.locale')
     
