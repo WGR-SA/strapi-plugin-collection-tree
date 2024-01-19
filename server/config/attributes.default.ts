@@ -2,10 +2,20 @@ export default {
   lft: {
     type: 'integer',
     default: null,
+    pluginOptions: {
+      i18n: {
+        localized: true
+      }
+    }
   },
   rght: {
     type: 'integer',
     default: null,
+    pluginOptions: {
+      i18n: {
+        localized: true
+      }
+    }
   },
   parent: {
     type: "relation",
@@ -22,5 +32,10 @@ export default {
   tree: {
     type: 'string',
     default: null,
+    pluginOptions: {
+      i18n: {
+        localized: true
+      }
+    }
   },
 }

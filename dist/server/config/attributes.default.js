@@ -4,10 +4,20 @@ exports.default = {
     lft: {
         type: 'integer',
         default: null,
+        pluginOptions: {
+            i18n: {
+                localized: true
+            }
+        }
     },
     rght: {
         type: 'integer',
         default: null,
+        pluginOptions: {
+            i18n: {
+                localized: true
+            }
+        }
     },
     parent: {
         type: "relation",
@@ -24,5 +34,10 @@ exports.default = {
     tree: {
         type: 'string',
         default: null,
+        pluginOptions: {
+            i18n: {
+                localized: true
+            }
+        }
     },
 };
