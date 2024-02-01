@@ -23,7 +23,7 @@ export default async ({ strapi }: { strapi: Strapi }) => {
       if (settings.models.includes(model)) {
         const current = await strapi.service(event.model.uid)?.findOne(event.params.where?.id)
         
-        event.params.data = await getPluginService('sort')?.updateOnUpdate(model, data, current.locale) 
+        event.params.data = await getPluginService('sort')?.updateOnUpdate(model, data, current?.locale) 
       }
     }
     if (event.action === 'afterDelete') {

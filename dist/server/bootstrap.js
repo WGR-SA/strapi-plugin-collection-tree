@@ -25,7 +25,7 @@ exports.default = async ({ strapi }) => {
             const model = event.model.uid.split('.').pop();
             if (settings.models.includes(model)) {
                 const current = await ((_b = strapi.service(event.model.uid)) === null || _b === void 0 ? void 0 : _b.findOne((_c = event.params.where) === null || _c === void 0 ? void 0 : _c.id));
-                event.params.data = await ((_d = (0, serviceGetter_1.getPluginService)('sort')) === null || _d === void 0 ? void 0 : _d.updateOnUpdate(model, data, current.locale));
+                event.params.data = await ((_d = (0, serviceGetter_1.getPluginService)('sort')) === null || _d === void 0 ? void 0 : _d.updateOnUpdate(model, data, current === null || current === void 0 ? void 0 : current.locale));
             }
         }
         if (event.action === 'afterDelete') {
